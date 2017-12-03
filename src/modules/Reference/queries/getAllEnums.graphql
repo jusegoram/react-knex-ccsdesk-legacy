@@ -1,0 +1,7 @@
+#import "../ReferenceEnum.graphql"
+
+query getAllEnums {
+  referenceEnums {
+    ...ReferenceEnumInfo
+  }
+}

@@ -1,0 +1,10 @@
+query routelog($date: String!) {
+  routelogInfo(date: $date) {
+    ...RoutelogInfo
+  }
+}
+
+fragment RoutelogInfo on RoutelogImportDay {
+  date
+  stats
+}

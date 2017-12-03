@@ -1,0 +1,30 @@
+type Manager {
+  id: Int!
+  first_name: String
+  last_name: String
+  email: String
+  phone_number: String
+  parents: [String]
+}
+
+type ManagerPage {
+  managers: [Manager]
+  totalCount: Int
+  offset: Int
+  limit: Int
+  hasNextPage: Boolean
+  hasPrevPage: Boolean
+}
+type Group {
+  id: Int
+  type: String
+  name: String
+
+}
+extend type Query {
+  # Techs pagination query
+  managerPage(limit: Int, offset: Int, queryString: String): ManagerPage
+  # Tech
+  manager(id: Int!): Manager
+  managerGroups(id: Int!): [Group]
+}

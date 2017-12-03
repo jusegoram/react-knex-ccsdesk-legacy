@@ -1,0 +1,24 @@
+//CCS_UNIQUE HA5EEDNNP1C
+const _ = require('lodash')
+const fs = require('fs')
+const path = require('path')
+const augmentKnex = require('../augmentKnex')
+const TechProfile = require('../import/techProfile')
+
+export async function seed(knex) {
+  // knex = augmentKnex(knex)
+  // const source = 'DIRECTSAT'
+  // const csvObjs = await TechProfile.parseCsvString({
+  //   source,
+  //   csvString: fs.readFileSync(path.resolve(__dirname, 'directsat.techprofile.csv')) + '',
+  //   companyMap: {
+  //     W2: 'DirectSat',
+  //     'DW Direct INC': 'DW Direct',
+  //   },
+  // })
+  // await knex.transaction(async trx => {
+  //   const activeTechIds = _.map(csvObjs, 'Tech User ID')
+  //   await TechProfile.clearObsoluteTechs({ trx, source, activeTechIds })
+  //   await TechProfile.updateDbObjects({ trx, source, csvObjs })
+  // })
+}

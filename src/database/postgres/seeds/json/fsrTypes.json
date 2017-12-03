@@ -1,0 +1,21 @@
+[
+  ["Name"],
+  ["Case Management", "  "],
+  ["Commercial", "  "],
+  ["Customer Unscheduled", "  "],
+  ["Equipment Missing", "  "],
+  ["Installation Feedback", "  "],
+  ["NC Rollback", "  "],
+  ["OTG", "  "],
+  ["PENDING FSR", "  "],
+  ["Post Call Equipment Left", "  "],
+  ["Post Call Failure", "  "],
+  ["Post Call Tech Complaint", "  "],
+  ["Priority Issue", "  "],
+  ["Priority Waitlist", "  "],
+  ["Special Event Outage", "  "],
+  ["Unresolved Escalation", "  "],
+  ["Urgent Issue", "  "],
+  ["Where is My Tech", "  "],
+  ["Work Not Complete", "  "]
+]

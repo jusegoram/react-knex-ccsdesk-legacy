@@ -1,0 +1,6 @@
+# GraphQL queries
+fragment ReferenceEnumInfo on ReferenceEnum {
+  id
+  name
+  values
+}

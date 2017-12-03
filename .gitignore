@@ -1,0 +1,13 @@
+.idea
+.tmp
+node_modules
+build
+npm-debug.*
+.expo/
+*.sqlite3
+.DS_Store
+jsconfig.json
+
+# .env 
+
+src/database/postgres/seeds/*.csv

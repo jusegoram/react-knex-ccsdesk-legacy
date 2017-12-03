@@ -1,0 +1,14 @@
+[
+  ["Reason", "Type"],
+  ["Extend", "NA", "  "],
+  ["Extend", "Extended", "  "],
+  ["Extend", "Cancelled", "  "],
+  ["Extend", "Rescheduled", "  "],
+  ["Extend", "Hold", "  "],
+  ["Outbound", "Reschedule", "  "],
+  ["Outbound", "Pull Forward", "  "],
+  ["Outbound", "Extends", "  "],
+  ["Outbound", "Update Status", "  "],
+  ["Outbound", "Provide Info", "  "],
+  ["Outbound", "Other", "  "]
+]

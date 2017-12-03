@@ -1,0 +1,9 @@
+#import "../Tech.graphql"
+
+query tech($cid: String!) {
+  tech(cid: $cid) {
+    ...TechProps
+    group_names
+    groups
+  }
+}

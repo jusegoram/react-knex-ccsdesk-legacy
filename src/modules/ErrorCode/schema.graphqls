@@ -1,0 +1,11 @@
+type ErrorCode {
+  id: Int!
+  code: String!
+  description: String!
+  resolution: String!
+}
+
+extend type Query {
+  # Techs pagination query
+  errorCodes: [ErrorCode]
+}

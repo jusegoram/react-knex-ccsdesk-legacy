@@ -1,0 +1,1 @@
+ssh -i ~/.ssh/techtracker.pem ubuntu@34.233.100.247

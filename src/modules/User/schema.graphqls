@@ -1,0 +1,128 @@
+type User {
+  id: Int!
+  techId: String
+  role: String
+  company: String
+  hsp: String
+  email: String
+  firstName: String
+  lastName: String
+  techs: [String]
+}
+
+type InviteResponse {
+  success: Boolean
+}
+
+type UserPayload {
+  user: User
+  errors: [FieldError!]
+}
+
+type AuthPayload {
+  tokens: Tokens
+  errors: [FieldError!]
+}
+
+type ResetPayload {
+  errors: [FieldError!]
+}
+
+type Tokens {
+  token: String!
+  refreshToken: String!
+}
+
+extend type Query {
+  # Get all users ordered by: OrderByUserInput add filtered by: FilterUserInput
+  users(orderBy: OrderByUserInput, filter: FilterUserInput): [User]
+  # Get user by id
+  user(id: Int!): User
+  # Get current user
+  currentUser: User
+}
+
+extend type Mutation {
+  # Register user
+  validateRegistrationToken(token: String!): String!
+  register(input: RegisterUserInput!): UserPayload!
+  invite(name: String!, email: String!, role: String!): InviteResponse!
+  # Login user
+  login(input: LoginUserInput!): AuthPayload!
+  # Logout user
+  logout: Boolean!
+  # Refreash user tokens
+  refreshTokens(token: String!, refreshToken: String!): AuthPayload!
+  # Create new user
+  addUser(input: AddUserInput!): UserPayload!
+  # Edit a user
+  editUser(input: EditUserInput!): UserPayload!
+  # Delete a user
+  deleteUser(id: Int!): UserPayload!
+  forgotPassword(input: ForgotPasswordInput!): Boolean!
+  resetPassword(input: ResetPasswordInput!): ResetPayload!
+}
+
+# Input for ordering users
+input OrderByUserInput {
+  # id | username | isAdmin | isAdmin | email
+  column: String
+  # asc | desc
+  order: String
+}
+
+# Input for filtering users
+input FilterUserInput {
+  # search by username or email
+  searchText: String
+  # filter by isAdmin
+  isAdmin: Boolean
+  # filter by isActive
+  isActive: Boolean
+}
+
+input RegisterUserInput {
+  token: String!
+  tech_id: String!
+  password: String!
+  phone_number: String!
+  first_name: String!
+  last_name: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+# Input for addUser Mutation
+input AddUserInput {
+  username: String!
+  email: String!
+  password: String!
+  isAdmin: Boolean
+  isActive: Boolean
+}
+
+# Input for editUser Mutation
+input EditUserInput {
+  id: Int!
+  username: String!
+  isAdmin: Boolean
+  isActive: Boolean
+  email: String!
+  password: String
+}
+
+input ForgotPasswordInput {
+  email: String!
+}
+
+input ResetPasswordInput {
+  token: String!
+  password: String!
+  passwordConfirmation: String!
+}
+
+extend type Subscription {
+}

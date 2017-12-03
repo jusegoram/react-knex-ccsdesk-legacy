@@ -1,0 +1,6 @@
+mutation claimTech($cid: String!) {
+  claimTech(cid: $cid) {
+    id
+    techs
+  }
+}

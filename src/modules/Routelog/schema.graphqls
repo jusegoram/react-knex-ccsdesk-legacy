@@ -1,0 +1,9 @@
+type RoutelogImportDay {
+  date: String!
+  stats: String!
+}
+
+extend type Query {
+  routelogDays: [RoutelogImportDay]
+  routelogInfo(date: String!): RoutelogImportDay
+}

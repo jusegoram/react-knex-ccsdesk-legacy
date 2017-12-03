@@ -1,0 +1,38 @@
+type Tech {
+  cid: String!
+  tech_id: String!
+  source: String
+  company: String
+  first_name: String
+  last_name: String
+  phone_number: String
+  group_names: String
+  groups: [String]
+}
+
+type TechPage {
+  techs: [Tech]
+  totalCount: Int
+  offset: Int
+  limit: Int
+  hasNextPage: Boolean
+  hasPrevPage: Boolean
+}
+
+extend type Query {
+  # Tech
+  tech(cid: String!): Tech
+  # Techs pagination query
+  techs(
+    limit: Int
+    offset: Int
+    filter: [String]
+    queryString: String
+  ): TechPage
+}
+
+extend type Mutation {
+  findManagersForWorker(techId: String!): [String]
+  claimTech(cid: String!): User
+  unclaimTech(cid: String!): User
+}

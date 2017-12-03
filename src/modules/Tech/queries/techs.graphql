@@ -1,0 +1,24 @@
+#import "../Tech.graphql"
+
+query techs(
+  $limit: Int
+  $offset: Int
+  $filter: [String]
+  $queryString: String
+) {
+  techs(
+    limit: $limit
+    offset: $offset
+    filter: $filter
+    queryString: $queryString
+  ) {
+    techs {
+      ...TechProps
+    }
+    totalCount
+    offset
+    limit
+    hasNextPage
+    hasPrevPage
+  }
+}

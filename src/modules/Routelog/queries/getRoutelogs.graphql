@@ -1,0 +1,9 @@
+query getRoutelogImports {
+  routelogDays {
+    ...RoutelogDays
+  }
+}
+
+fragment RoutelogDays on RoutelogImportDay {
+  date
+}

@@ -1,0 +1,7 @@
+# GraphQL queries
+fragment ErrorCodeInfo on ErrorCode {
+  id
+  code
+  description
+  resolution
+}

@@ -1,0 +1,37 @@
+@import "bootstrap";
+
+$footer-height: 40px;
+
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn,
+.badge-pill {
+  cursor: pointer;
+}
+
+.active {
+  color: #000;
+}
+
+.nav {
+  .nav-link {
+    color: rgba(255, 255, 255, 0.67);
+  }
+  .nav-link.active {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+  }
+}
+
+.mainContent {
+  height: calc(100vh - 70px);
+  overflow: scroll;
+}

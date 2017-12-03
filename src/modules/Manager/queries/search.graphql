@@ -1,0 +1,14 @@
+#import "../Manager.graphql"
+
+query managerPage($limit: Int!, $offset: Int, $queryString: String) {
+  managerPage(limit: $limit, offset: $offset, queryString: $queryString) {
+    managers {
+      ...ManagerInfo
+    }
+    totalCount
+    offset
+    limit
+    hasNextPage
+    hasPrevPage
+  }
+}

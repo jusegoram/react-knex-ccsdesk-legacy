@@ -1,0 +1,5 @@
+mutation invite($name: String!, $email: String!, $role: String!) {
+  invite(name: $name, email: $email, role: $role) {
+    success
+  }
+}

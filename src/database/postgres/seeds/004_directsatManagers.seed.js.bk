@@ -1,0 +1,107 @@
+//CCS_UNIQUE 7G1J2XP5WWM
+const Promise = require('bluebird')
+const _ = require('lodash')
+const parseFullName = require('parse-full-name').parseFullName
+const augmentKnex = require('../augmentKnex')
+
+const w2ManagerJson = require('./json/leaders.ds.json')
+
+console.log(_.uniq(w2ManagerJson.map(el => el[1])))
+
+export async function seed(knex) {
+  //   knex = augmentKnex(knex)
+  //   const managers = w2ManagerJson.flatMap(managerRow => {
+  //     const datas = _.chunk(managerRow.slice(11, 26), 3)
+  //     return datas.filter(d => d[0] && d[1]).map(data => {
+  //       const first_name = data[0]
+  //       const last_name = data[1]
+  //       const name = parseFullName(`${first_name} ${last_name}`)
+  //       const display = `${name.first} ${name.last}`
+  //       const phone_number = (data[2] || '').replace(/[^0-9]/g, '')
+  //       const company = 'GOODMAN'
+  //       const serviceRegions = managerRow[2].split(',')
+  //       const manager = { company, first_name: name.first, last_name: name.last, display, phone_number, serviceRegions }
+  //       if (phone_number) {
+  //         const digitsOnly = phone_number.replace(/[^0-9]/g, '')
+  //         if (/^[0-9]{10,11}$/.test(digitsOnly)) {
+  //           const tenDigits = digitsOnly.slice(digitsOnly.length - 10, digitsOnly.length)
+  //           manager.phone_number = tenDigits
+  //           manager.formatted_phone_number =
+  //             `(${tenDigits.slice(0, 3)}) ` + `${tenDigits.slice(3, 6)}-${tenDigits.slice(6, 10)}`
+  //         }
+  //       }
+  //       return manager
+  //     })
+  //   })
+  //   await knex.transaction(async trx => {
+  //     await Promise.resolve(managers).mapSeries(async manager => {
+  //       const { serviceRegions } = manager
+  //       const managerGroup = await trx
+  //       .into('groups')
+  //       .upsert({
+  //         display: manager.display,
+  //         type: 'Manager',
+  //         key: manager.display,
+  //         depth: 3,
+  //       })
+  //       .withConstraints(['type', 'key'])
+  //       await trx
+  //       .into('managers')
+  //       .upsert({
+  //         display: manager.display,
+  //         group_id: managerGroup.id,
+  //         first_name: manager.first_name,
+  //         last_name: manager.rlast_name,
+  //         phone_number: manager.phone_number,
+  //       })
+  //       .withConstraints(['first_name', 'last_name'])
+  //       await Promise.resolve(serviceRegions).map(async serviceRegion => {
+  //         const dbSr = await trx
+  //         .into('groups')
+  //         .upsert({
+  //           display: serviceRegion,
+  //           key: serviceRegion,
+  //           type: 'Service Region',
+  //           depth: 4,
+  //         })
+  //         .withConstraints(['type', 'key'])
+  //         await trx
+  //         .into('groups_rel')
+  //         .upsert({
+  //           group_id: managerGroup.id,
+  //           intersected_id: dbSr.id,
+  //           group_type: managerGroup.type,
+  //           group_display: managerGroup.display,
+  //           intersected_type: dbSr.type,
+  //           intersected_display: dbSr.display,
+  //           direct: true,
+  //         })
+  //         .withConstraints(['group_id', 'intersected_id'])
+  //         await trx
+  //         .select()
+  //         .from('groups_rel')
+  //         .where({ intersected_id: dbSr.id })
+  //         .where(function() {
+  //           this.where({ group_id: managerGroup.id }).orWhereNot({ group_type: 'Manager' })
+  //         })
+  //         .map(async srRel => {
+  //           await trx
+  //           .into('groups_rel')
+  //           .upsert(
+  //             _.omit(
+  //               {
+  //                 ...srRel,
+  //                 intersected_id: managerGroup.id,
+  //                 intersected_type: managerGroup.type,
+  //                 intersected_display: managerGroup.display,
+  //                 direct: srRel.group_type !== 'Manager',
+  //               },
+  //               'id'
+  //             )
+  //           )
+  //           .withConstraints(['group_id', 'intersected_id'])
+  //         })
+  //       })
+  //     })
+  //   })
+}

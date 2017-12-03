@@ -1,0 +1,7 @@
+#import "../Manager.graphql"
+
+query manager($id: Int!) {
+  manager(id: $id) {
+    ...ManagerInfo
+  }
+}

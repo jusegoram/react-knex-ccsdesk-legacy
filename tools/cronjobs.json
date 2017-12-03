@@ -1,0 +1,26 @@
+[
+  {
+    "comment": "Fetch Goodman Routelog",
+    "command": "ccs import Goodman Routelog",
+    "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * * ",
+    "logName": "goodmanRoutelog"
+  },
+  {
+    "comment": "Fetch DirectSat Routelog",
+    "command": "ccs import DirectSat Routelog",
+    "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *",
+    "logName": "directsatRoutelog"
+  },
+  {
+    "comment": "Fetch Goodman Tech Profile",
+    "command": "ccs import Goodman TechProfile",
+    "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * * ",
+    "logName": "goodmanTechProfile"
+  },
+  {
+    "comment": "Fetch DirectSat Tech Profile",
+    "command": "ccs import DirectSat TechProfile",
+    "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *",
+    "logName": "directsatTechProfile"
+  }
+]

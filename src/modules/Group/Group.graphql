@@ -1,0 +1,6 @@
+# GraphQL queries
+fragment GroupInfo on Group {
+  id
+  type
+  name
+}

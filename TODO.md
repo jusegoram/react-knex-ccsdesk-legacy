@@ -1,0 +1,1 @@
+- change csv indices to be partial (only index on recent data)

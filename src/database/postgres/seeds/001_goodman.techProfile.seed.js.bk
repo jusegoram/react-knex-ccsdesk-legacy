@@ -1,0 +1,27 @@
+//CCS_UNIQUE UV0YA3R7NFS
+const _ = require('lodash')
+const fs = require('fs')
+const path = require('path')
+const augmentKnex = require('../augmentKnex')
+const TechProfile = require('../import/techProfile')
+
+export async function seed(knex) {
+  // knex = augmentKnex(knex)
+  // const source = 'GOODMAN'
+  // const csvObjs = await TechProfile.parseCsvString({
+  //   source,
+  //   csvString: fs.readFileSync(path.resolve(__dirname, 'goodman.techprofile.csv')) + '',
+  //   companyMap: {
+  //     W2: 'Goodman',
+  //     'CLEAR SKY TECH LLC': 'Next Solutions LLC',
+  //     'STARLIGHT COMM': 'Starlight Communications',
+  //     'DW DIRECT': 'DW Direct',
+  //     EMPATH: 'Empath',
+  //   },
+  // })
+  // await knex.transaction(async trx => {
+  //   const activeTechIds = _.map(csvObjs, 'Tech User ID')
+  //   await TechProfile.clearObsoluteTechs({ trx, source, activeTechIds })
+  //   await TechProfile.updateDbObjects({ trx, source, csvObjs })
+  // })
+}

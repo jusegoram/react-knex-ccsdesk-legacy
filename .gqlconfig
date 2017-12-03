@@ -1,0 +1,28 @@
+/* .gqlconfig */
+{
+  schema: {
+    files: "src/graphql/**/*.graphqls",
+    validate: {
+      extends: "gql-rules-schema",
+      rules: {
+        KnownFragmentNames: "off",
+        NoUnusedFragments: "off"
+      }
+    }
+  },
+  query: {
+    files: [
+      {
+        match: 'src/graphql/**/*.graphql',
+        parser: 'QueryParser',
+        validate: {
+          extends: "gql-rules-query",
+          rules: {
+            KnownFragmentNames: "off",
+            NoUnusedFragments: "off"
+          }
+        }
+      }
+    ],
+  },
+}

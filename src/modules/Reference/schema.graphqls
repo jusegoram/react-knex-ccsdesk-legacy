@@ -1,0 +1,10 @@
+type ReferenceEnum {
+  id: Int!
+  name: String!
+  values: [String]!
+}
+
+extend type Query {
+  # Techs pagination query
+  referenceEnums: [ReferenceEnum]
+}

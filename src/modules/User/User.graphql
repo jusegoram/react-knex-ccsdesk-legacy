@@ -1,0 +1,11 @@
+fragment UserInfo on User {
+  id
+  techId
+  role
+  company
+  hsp
+  email
+  firstName
+  lastName
+  techs
+}

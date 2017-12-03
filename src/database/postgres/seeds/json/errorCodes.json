@@ -1,0 +1,243 @@
+[
+  ["Code", "Description", "Resolution"],
+  [
+    "00141",
+    "Display Code : IDS_EAI_WS_OD_RESPONSE_EXPECTED SBL-SCR-00141",
+    "Refresh Siebel.",
+    "  "
+  ],
+  [
+    "00162",
+    "SBL-BPR-00162 Description : Operation 'RequestReceiverSwap' is expecting a response but no response was received.(SBL-EAI-04311).",
+    "Call IVR.",
+    "  "
+  ],
+  [
+    "00225",
+    "The value entered in field DTV FS IRD Action of buscomp Order Entry - Line Items does not match any value in the bounded pick list DTV FS TAT Parent Picklist. (SBL-DAT-00225)",
+    "Sometimes odd codes like this just require resubmitting the OLI or the tech calling IVR.",
+    "  "
+  ],
+  [
+    "08011",
+    "R3-OLI-08011:You are attempting to relocate more products than allowed on this order.",
+    "This is when you are trying to close a work order that has too many existing OLIs closed as Relocated. (see Relocate error)",
+    "  "
+  ],
+  [
+    "221013",
+    "Display Code: -1 Description: 221013 -- At least one receiver should be selected with no dependencies.",
+    "Call IVR.",
+    "  "
+  ],
+  [
+    "221022",
+    "Display Code : -1 Description : 221022:All selected receivers activated but at least one other line item failed",
+    "This typically involves swapping when clients are involved.   When we see this we tell the tech to call IVR to get it fixed.  It gets fixed and closed without us hearing back from a tech so we assume IVR fixes it.",
+    "  "
+  ],
+  [
+    "221023",
+    "Display Code : -1 Description : Client transaction rolled back to due other errors. 221023--Order activated successfully but one or more line items added by the activation business rules failed",
+    "Call IVR",
+    "  "
+  ],
+  [
+    "221039",
+    "Display Code : -1 Description : Asset not found with specified asset Id. 221039--Some Clients processing failed",
+    "Advise tech to call ISS if IVR failed.",
+    "  "
+  ],
+  [
+    "711",
+    "Access card is not active. ",
+    "This message usually means either your account or your access card isn’t authorized for services.",
+    "  "
+  ],
+  [
+    "721",
+    "Service isn’t authorized. ",
+    "This message usually means either your account or equipment is not getting the information that authorizes your service.",
+    "  "
+  ],
+  [
+    "722",
+    "Service expired. ",
+    "The message usually occurs if the receiver was unplugged from its power source or the dish for more than a month. Or the receiver is not getting the information that provides your service.",
+    "  "
+  ],
+  [
+    "724",
+    "RID Pairing not received. ",
+    "This OSD appears when the RID receiver and access card are not paired.",
+    "  "
+  ],
+  [
+    "725",
+    "RID pairing will fail. ",
+    "This OSD appears when the RID receiver and access card are not paired",
+    "  "
+  ],
+  [
+    "726",
+    "Wrong or missing RID number. ",
+    "This OSD appears when the RID number is missing or doesn’t match the RID number for that IRD.",
+    "  "
+  ],
+  [
+    "727",
+    "Program not available in your area. ",
+    "This message appears when the program is not available in your area. This could be a result of a sports blackout or trying to tune to a channel that is spot beamed.",
+    "  "
+  ],
+  [
+    "731",
+    "Access card full. ",
+    "This message appears when there have been purchases that have either exceeded the spending limit of the access card or there have been several orders that have not downloaded to DIRECTV. In most cases this also indicates that the unit is not calling back. You must check to see if the telephone connection is working properly.",
+    "  "
+  ],
+  [
+    "732",
+    "IPPV Purchase limit reached. ",
+    "This message appears when the customer has reached their spending limit in pay-per-view or is attempting to purchase packaging that cost more than his limit. He needs to call customer service to either purchase the package using a credit card or to see if he can increase his spending limit. You can’t fix this problem.",
+    "  "
+  ],
+  [
+    "Count of Relocate",
+    "THE COUNT OF RELOCATE LINE ITEMS SHOULD BE EQUAL TO THE COUNT OF EXISTING OLIS CLOSED WITH TAT = RELOCATED.\n(ALL THE IRD LINE ITEMS ARE CLOSED)\n",
+    "SEND A HSP REQUEST TO FOSS\nAREA : FOSS ASSISTANCE\nSUB AREA : CLOSED W INCORRECT ACTION TAKEN\nCOMMENT : EX. PLEASE CHANGE ACTION REQUIRED ON LINE # 8 TO RELOCATED\nTO DO ITEM : ON THE LINE ITEM NEEDED TO BE CHANGED\n",
+    "  "
+  ],
+  [
+    "deleting IRD",
+    "FOR DELETING IRD THAT WAS ADDED BY TECH OR AGENT FOR SERVICE AND DOA",
+    "YOU CAN DELETE THE LINE ITEM BY CHANGING THE TECH ACTION TAKEN TO NO ACTION TAKEN\n\nYOU DONT HAVE TO SEND IT TO WOI\n",
+    "  "
+  ],
+  [
+    "Display Code : -1",
+    "Account type is not allowed to mirror cards 221015--The account could not be activated",
+    "For possible fraud, not equipment related, there are just some information that needs to be verified by the Fraud department (# 8882653969). The fix is to call fraud department.",
+    "  "
+  ],
+  [
+    "DTV Access Card Services",
+    "Method 'WriteRecord' of business component 'DTV Access Card ServicesREAI' (integration component 'DTV Access Card Services') for record with search specification '[Product Integration Id] = \"P|6412|DTV|DTV\" AND [Asset Number] = \"41405766|003064215795\"' re",
+    "Refer tech to IVR",
+    "  "
+  ],
+  [
+    "existing line item",
+    "The product you are attempting to deactivate must appear as an existing line item on the work order. Select the correct product and try again.",
+    "SEND REQUEST TO FOSS (PLEASE MAKE RECEIVER WITH ACCESS CARD # AN ACTIVE LINE ITEM, THIS RECEIVER IS ACTIVE ON THE ACCOUNT)",
+    "  "
+  ],
+  [
+    "existing receiver",
+    "You should only deactivate the receiver/client that is an existing line item on the order. Please choose the correct receiver to deactivate and submit the line item again.",
+    "This happens usually when someone is trying to do a Swap  and the Swap Access card is not an Existing OLI.  Typically the tracker or tech has chosen a wrong swap access card or the access card they have chosen is NOT active in the receivers tab.  IF the access card is not active but is an existing OLI, then the tech can call IVR to turn that access card back on so that the OLI will close.  FOSS will sometimes force close one of these if you do a Fix Failed Line on it but it is MUCH faster for everyone if tech calls IVR.   IF the swap access card is not an existing OLI but needs to be, then you must create a new OLI and input the Access card, Serial #, RID # and chose tech action taken as Swap…Do NOT submit the line,  but leave the info on the line so that FOSS can see it.  Then you can submit a request to FOSS to have them set that line as Existing.\n",
+    "  "
+  ],
+  [
+    "NA",
+    "Display Code : -1 Description : The supplied DateTime represents an invalid time.  For example, when the clock is adjusted forward, any time in the period that is skipped is invalid.\nParameter name: dateTime",
+    "CALL IVR - MOST LIKELY TECH ADJUSTED TIME IN HH",
+    "  "
+  ],
+  [
+    "NA",
+    "Display Code : ERROR Description : Order not found in OMS.",
+    "Submit line item twice, if line item still showing failed check Receivers Tab to check if the receiver was activated. If no, let tech call IVR.",
+    "  "
+  ],
+  [
+    "no RID",
+    "Receiver ID is required for this product. If this Receiver does not have a RID, please follow work order modification processes to upgrade the customer's equipment.",
+    "In RIO wireless, look for the RID # on the \"RECEIVER LIST\" (below OLI list), use the access card # as reference then paste the RID # on the specific OLI then submit.\n",
+    "  "
+  ],
+  [
+    "order/account state",
+    "The present state of the order is not consistent with the state of the account.",
+    "Advise tech to call IVR.",
+    "  "
+  ],
+  [
+    "PP required",
+    "TO CLOSE WO THAT REQUIRES PROTECTION PLAN TO BE POPULATED BUT ITS GRAYED OUT",
+    "*GO TO ORDER\n*GO TO SIGNATURES\n*ADD PROTECTION PLAN AS REFUSED\n*REASON DOESNT WANT",
+    "  "
+  ],
+  [
+    "product attribute",
+    "Description:  The Selected Product Attribute: MRV Content Sharing is not set to: Yes So please select the different Product and Submit Again.",
+    "Problem: The receiver which you’re attempting to activate on the order line item is not an MRV compatible receiver. This is typically seen on scenarios where the customers’ receiver is being replaced.\n\nThe replacement receiver must have the same capabilities as the receiver being removed.\nExample: if the defective receiver is SWiM and/or MRV compatible, the replacement must also be SWiM and or MRV capable.\n",
+    "  "
+  ],
+  [
+    "product attribute",
+    "The Selected Product Attribute: 'MRV Installable' is not set to: 'Yes' so please select the different Product and Submit Again.",
+    "Problem: The receiver which you’re attempting to activate on the order line item is not an MRV compatible receiver.\nIf the compatibility field reflects MRV programming or MRVnoProgramming, the receiver being activated must be an MRV compatible receiver.",
+    "  "
+  ],
+  [
+    "R3-OLI-01003",
+    "Access Card Number already in use. Please select different Access Card Number and submit again.",
+    "Problem: This error message indicates the Access Card number entered on the new line already exists on one of the Order Line Items.\n\nEnsure you are not entering the same Access Card number twice.\nConfirm with the technician to determine exactly what was performed on the job.\nIf the technician relocated the receiver and the action required on the new line is New, create an ISR for FOSS to change the Activity to Relocate.\nIf you can confirm the receiver was activated prior to the order being created, create an ISR for FOSS.",
+    "  "
+  ],
+  [
+    "R3-OLI-01003",
+    "IRD Serial # OR Location OR Access Card # OR RID # is Null or Part Status is Null",
+    "Problem: One of the fields required for activation or deactivation is not populated.\n\nPopulate all required fields and resubmit the line item.\n\nRequired fields include: IRD Serial #, Product, Access Card #, RID (if applicable), Part Status, and Location.\n\nProduct name can not be the generic IRD - STANDARD, it must include a model number.\n\nPart Status should be Good Used if the Delivery Method is Customer Owned. Good New for Tech Delivered.\n\nIf it is a Former Install, ensure that the new Order Line Items match the existing. If the existing line includes 12 zeros as the RID #, the new line must match.\n\nIf steps fail, create an ISR for FOSS.",
+    "  "
+  ],
+  [
+    "R3-OLI-01019",
+    "Data on OLI does not match data on account.",
+    "Problem: The equipment information entered on the Order Line Item does not match what was entered by the DIRECTV call center rep at time of activation or deactivation. Or the receiver is not active on the account number listed on the order.\n\nThe technician must contact the IVR for assistance to activate the receiver. Submit the OLI again only after successful activation.",
+    "  "
+  ],
+  [
+    "R3-OLI-05003",
+    "You cannot submit this OLI until in progress transactions are complete.",
+    "Problem: The user attempted to submit an OLI while another OLI is in Submitted or In Transit line item status.\n\nQuery for the last OLI submitted and ensure it successfully closed. If there are, you must follow this process to ensure the OLI closes successfully before submitting other OLIs.\n\nIf step A fails, create an ISR for FOSS.",
+    "  "
+  ],
+  [
+    "Relocate",
+    "The count of Relocate line items should be equal to the count of existing OLIs closed with TAT = Relocated. FSS-TRC 100042.",
+    "We see this error all the time.  It is simply there are too many box OLIs requesting for an existing line to be relocated or more existing OLIs have been relocated than what is being requested by new OLIs.   Add up the # of new box OLIs either new or swaps that contain Action Required = Swap Relocate or Relocate, then that # should be the # of existing OLIs that get closed as relocated.   If too many OLIs are closed already than what is needed then we add an OLI with FOSS that is a customer owned standard relocate.   Tip… take care of Relocates before entering IV retest success codes.",
+    "  "
+  ],
+  [
+    "RID",
+    "Account cannot have two Receivers with the same RID number. Enter correct RID. ",
+    "Problem: The RID is listed more than once on the OLI.\n\nReview the OLI to identify where the RID was duplicated.\nEnter the Correct RID.\nIf problem persists, send request to WOI to Delete customer own line item.",
+    "  "
+  ],
+  [
+    "RID already in use",
+    "RID Number already in use. Select different RID Number and submit again.",
+    "Review the order line items to identify if the RID number was duplicated.\nEnter the correct RID number and resubmit the order line item.\nIf the RID number is only listed once an ISR should be created for FOSS.",
+    "  "
+  ],
+  [
+    "success code",
+    "Success Code Validation Failed. Enter a Valid Success Code and resubmit OR Remove the Success Code and Submit Line Item again to get the new Success Code on TV.",
+    "Remove Success Code and have Tech resend IV Retest.",
+    "  "
+  ],
+  [
+    "SWiM",
+    "The Selected Product Attribute: SWiM is not set to: Yes So please select the different Product and Submit Again.",
+    "Send to Foss",
+    "  "
+  ],
+  [
+    "TSC",
+    "The system was unable to reactivate the account. Contact TSC to get all the receivers and services activated on the account and submit this OLI again.",
+    "Call DTV",
+    "  "
+  ]
+]

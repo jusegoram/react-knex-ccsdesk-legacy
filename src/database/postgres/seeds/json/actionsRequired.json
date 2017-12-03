@@ -1,0 +1,15 @@
+[
+  [],
+  ["ACKNOWLEDGED", "  "],
+  ["BGO", "  "],
+  ["Dispatch", "  "],
+  ["Pin", "  "],
+  ["Pin and Dispatch", "  "],
+  ["Pull Forward", "  "],
+  ["Pull Forward and dispatch", "  "],
+  ["Pull forward and pin to tech", "  "],
+  ["Reschedule", "  "],
+  ["Reschedule and pin", "  "],
+  ["Schedule", "  "],
+  ["Upschedule", "  "]
+]

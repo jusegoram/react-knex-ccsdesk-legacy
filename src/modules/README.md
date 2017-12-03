@@ -1,0 +1,1 @@
+This folder wasn't part of the original project. I added it in order to stop moving between client/server folders. To add a new module, just copy and existing one and make a reference to it in the `src/client/modules` and `src/server/modules` index files.
