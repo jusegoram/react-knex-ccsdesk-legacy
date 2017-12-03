@@ -30,33 +30,26 @@ class Tech extends React.Component {
         </div>
       )
     }
-    console.log(loading)
-    console.log(tech)
     const { currentUser, tech, claimTech, unclaimTech } = this.props
 
     if (!this.fetchingManagers) {
       this.fetchingManagers = true
       this.props.getManagers(tech.tech_id).then(data => {
-        console.log('MANAGERS!!!')
-        console.log(data)
         const managers = data.data.findManagersForWorker.map(m => JSON.parse(m))
         this.setState({ managers })
       })
     }
     const group_names = JSON.parse(tech.group_names)
     const techName = namecase(`${tech.first_name} ${tech.last_name}`)
-    console.log('tech', currentUser)
-    const techphone = tech.phone_number
+          const techphone = tech.phone_number
     const formattedTechPhone = !techphone
       ? 'DNE'
       : `(${techphone.slice(0, 3)}) ${techphone.slice(3, 6)}-${techphone.slice(6, 10)}`
 
     const unsortedContactInfos = []
     if (this.state && this.state.managers) {
-      console.log('mana', this.state.managers)
       this.state.managers.forEach(techManager => {
         const techGroups = techManager.techGroups
-        console.log('tg', techGroups)
         const managerName = namecase(`${techManager.first_name} ${techManager.last_name}`)
         const phone = techManager.phone_number
         const formattedPhone = !phone ? 'DNE' : `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6, 10)}`
@@ -97,8 +90,9 @@ class Tech extends React.Component {
                 <Button
                   color="success"
                   size="sm"
-                  onClick={() => {
-                    claimTech({ cid: tech.cid })
+                  onClick={async () => {
+                    await claimTech({ cid: tech.cid })
+                    this.props.refetchCurrentUser()
                   }}
                 >
                   Claim Tech
@@ -110,8 +104,9 @@ class Tech extends React.Component {
                 <Button
                   color="danger"
                   size="sm"
-                  onClick={() => {
-                    unclaimTech({ cid: tech.cid })
+                  onClick={async () => {
+                    await unclaimTech({ cid: tech.cid })
+                    this.props.refetchCurrentUser()
                   }}
                 >
                   Unclaim Tech
@@ -207,6 +202,7 @@ Tech.propTypes = {
   claimTech: PropTypes.func.isRequired,
   unclaimTech: PropTypes.func.isRequired,
   getManagers: PropTypes.func.isRequired,
+  refetchCurrentUser: PropTypes.func.isRequired,
 }
 
 export default compose(
@@ -238,8 +234,8 @@ export default compose(
   }),
   graphql(CURRENT_USER_QUERY, {
     options: { fetchPolicy: 'network-only' },
-    props({ data: { currentUser } }) {
-      return { currentUser }
+    props({ data: { currentUser, refetch: refetchCurrentUser } }) {
+      return { currentUser, refetchCurrentUser }
     },
   })
 )(Tech)
