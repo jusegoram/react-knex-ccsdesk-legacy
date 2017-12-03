@@ -6,11 +6,12 @@ const User = require('../User/sql').default
 
 export default pubsub => ({
   Query: {
-    async techs(obj, { limit, offset, queryString, filter }, context) {
+    async techs(obj, { limit, offset, queryString, myTechs }, context) {
+      console.log('techs', myTechs)
       const { user } = context
       const { techs, totalCount } = await Promise.props({
-        totalCount: Tech.getTotalWithTextFilter({ user, filter, queryString }),
-        techs: Tech.searchForWorkersWithText({ limit, offset, filter, queryString, user }),
+        totalCount: Tech.getTotalWithTextFilter({ user, myTechs, queryString }),
+        techs: Tech.searchForWorkersWithText({ limit, offset, myTechs, queryString, user }),
       })
 
       return {

@@ -26,7 +26,7 @@ extend type Query {
   techs(
     limit: Int
     offset: Int
-    filter: [String]
+    myTechs: Boolean
     queryString: String
   ): TechPage
 }

@@ -25,36 +25,47 @@ const stringifyGroupNames = tech => {
 }
 
 export default class Tech {
-  static searchForWorkersWithText({ user, filter, limit, offset, queryString }) {
+  static async searchForWorkersWithText({ user, myTechs, limit, offset, queryString }) {
     const companyFilter = !user.company
       ? {}
       : user.company === user.hsp ? { source: user.hsp } : { company: user.company }
-    return (
-      knex
-      .select()
-      .from('techs')
-      .offset(offset)
-      .where(getFilterWhereClause(queryString))
-      .where(companyFilter)
-      .where(function() {
-        return !filter ? {} : this.whereIn('cid', filter)
-      })
-      .orderBy('tech_id', 'asc')
-      .limit(limit)
+    console.log(myTechs)
+    const techs = await knex
+    .select('techs')
+    .from('user')
+    .where({ id: user.id })
+    .first()
+    .get('techs')
+    return await knex
+    .select()
+    .from('techs')
+    .offset(offset)
+    .where(getFilterWhereClause(queryString))
+    .where(companyFilter)
+    .where(function() {
+      return !myTechs ? {} : this.whereIn('cid', techs)
+    })
+    .orderBy('tech_id', 'asc')
+    .limit(limit)
     // .map(camelizeKeys)
-      .map(stringifyGroupNames)
-    )
+    .map(stringifyGroupNames)
   }
 
-  static getTotalWithTextFilter({ user, filter, queryString }) {
+  static async getTotalWithTextFilter({ user, myTechs, queryString }) {
     const companyFilter = !user.company
       ? {}
       : user.company === user.hsp ? { source: user.hsp } : { company: user.company }
+    const techs = await knex
+    .select('techs')
+    .from('user')
+    .where({ id: user.id })
+    .first()
+    .get('techs')
     return knex('techs')
     .where(getFilterWhereClause(queryString))
     .where(companyFilter)
     .where(function() {
-      return !filter ? {} : this.whereIn('cid', filter)
+      return !myTechs ? {} : this.whereIn('cid', techs)
     })
     .count()
     .get(0)

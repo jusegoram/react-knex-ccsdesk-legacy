@@ -3,13 +3,13 @@
 query techs(
   $limit: Int
   $offset: Int
-  $filter: [String]
+  $myTechs: Boolean
   $queryString: String
 ) {
   techs(
     limit: $limit
     offset: $offset
-    filter: $filter
+    myTechs: $myTechs
     queryString: $queryString
   ) {
     techs {

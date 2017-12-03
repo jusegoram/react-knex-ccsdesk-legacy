@@ -87,16 +87,13 @@ export default compose(
   ),
   graphql(techsQuery, {
     options: props => {
-      const { size, queryString, myTechs, currentUser } = props
-      let filter = null
-      if (myTechs) filter = (currentUser && currentUser.techs) || []
+      const { size, queryString, myTechs } = props
       const limit = Math.floor((size.height - 62) / 65)
       return {
         fetchPolicy: 'cache-and-network',
-        variables: { limit, offset: 0, filter, queryString },
+        variables: { limit, offset: 0, myTechs, queryString },
       }
     },
     props: ({ data }) => data,
-  }),
-  graphql(currentUserQuery, { props: ({ data: { currentUser } }) => ({ currentUser }) })
+  })
 )(Techs)
