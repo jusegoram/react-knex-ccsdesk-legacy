@@ -22,5 +22,17 @@
     "command": "ccs import DirectSat TechProfile",
     "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *",
     "logName": "directsatTechProfile"
+  },
+  {
+    "comment": "Fetch Goodman BBE Data",
+    "command": "ccs import Goodman BBE",
+    "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *",
+    "logName": "goodmanBBE"
+  },
+  {
+    "comment": "Fetch DirectSat BBE Data",
+    "command": "ccs import DirectSat BBE",
+    "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *",
+    "logName": "directsatBBE"
   }
 ]

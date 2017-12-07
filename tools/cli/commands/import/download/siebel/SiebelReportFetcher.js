@@ -37,6 +37,7 @@ class SiebelReportFetcher {
     this.availableReports = {
       TechProfile: 'Tech Profile',
       Routelog: 'Route Log - Time - Zones',
+      BBE: 'BBE+BBR',
     }
     this.reportParamsPageHandlers = {
       'FSS_Detail_Closed Activities_V.2': function(horseman, options) {
