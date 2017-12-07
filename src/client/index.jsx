@@ -8,6 +8,7 @@ import 'backend_reload'
 import Main from './Main'
 import log from '../common/log'
 import './favicon'
+import './static'
 
 const root = document.getElementById('content')
 

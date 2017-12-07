@@ -62,6 +62,7 @@ const dependencyPlatforms = {
   persistgraphql: ['server', 'web'],
   'performance-now': 'server',
   pg: 'server',
+  pug: 'server',
   'react-cookie': ['server', 'web'],
   'react-dom': 'web',
   'react-dropzone': 'web',

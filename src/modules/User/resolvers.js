@@ -2,6 +2,9 @@
 /*eslint-disable no-unused-vars*/
 import { pick } from 'lodash'
 import jwt from 'jsonwebtoken'
+import fs from 'fs'
+import path from 'path'
+import pug from 'pug'
 import { refreshTokens, tryLogin } from './auth'
 import { requiresAuth, requiresAdmin } from './permissions'
 import FieldError from '../../common/FieldError'
@@ -21,6 +24,9 @@ AWS.config.sslEnabled = true
 const SES = new AWS.SES({ apiVersion: '2010-12-01' })
 const NodeMailer = nodemailer.createTransport(sesTransport({ ses: SES, rateLimit: 14 }))
 Promise.promisifyAll(NodeMailer)
+
+const inviteTemplate = pug.compileFile(path.resolve(__dirname, 'invite.pug'))
+const createInviteHtml = ({ name, token }) => inviteTemplate({ name, token })
 
 export default pubsub => ({
   Query: {
@@ -49,9 +55,7 @@ export default pubsub => ({
         from: 'CCS Desk <info@ccsdesk.com>',
         to: email,
         subject: `${context.user.firstName} ${context.user.lastName} has invited you to CCS Desk`,
-        html:
-          `Hello ${name}, you have been invited to create an account on CCS Desk. ` +
-          `<a href="https://ccsdesk.com/register#token=${token}">Click here to join.</a>`,
+        html: createInviteHtml({ name, token }),
       })
       return {
         success: true,
