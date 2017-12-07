@@ -54,6 +54,7 @@ export default async (req, res) => {
   .select()
   .from('daily_activities')
   .where('date', date)
+  .whereRaw('due_date = date')
   .leftJoin('bbe', 'bbe.activity_number', 'daily_activities.activity_number')
   .where(function() {
     if (company !== hsp) {
