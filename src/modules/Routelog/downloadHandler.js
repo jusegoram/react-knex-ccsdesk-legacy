@@ -40,6 +40,8 @@ const columns = [
   'Activity Geo Latitude',
   'Dwelling Type',
   'Internet Connectivity',
+  'BBE Status',
+  'BBE OLI Category',
   'Timezone',
 ]
 
@@ -52,6 +54,7 @@ export default async (req, res) => {
   .select()
   .from('daily_activities')
   .where('date', date)
+  .leftJoin('bbe', 'bbe.activity_number', 'daily_activities.activity_number')
   .where(function() {
     if (company !== hsp) {
       this.where({ company: company })
@@ -63,6 +66,8 @@ export default async (req, res) => {
   const stream = new Readable({ objectMode: true })
   await results.map(row => {
     if (row.status == 'Rescheduled') row.data['Status'] = 'Rescheduled'
+    if (row.bbe_status) row.data['BBE Status'] = row.bbe_status
+    if (row.bbe_category) row.data['BBE OLI Category'] = row.bbe_category
     stream.push(row.data)
   })
   stream.push(null)
