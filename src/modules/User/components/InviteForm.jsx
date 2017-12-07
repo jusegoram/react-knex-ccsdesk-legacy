@@ -32,7 +32,22 @@ renderField.propTypes = {
   meta: PropTypes.object,
 }
 
-const InviteForm = ({ handleSubmit, submitting, onSubmit, inviteErrors }) => {
+const InviteForm = ({ handleSubmit, submitting, onSubmit, inviteErrors, loading, currentUser }) => {
+  if (loading) {
+    return (
+      <div
+        style={{
+          height: '100%',
+          border: '1px solid #ccc',
+          backgroundColor: '#fff',
+          borderRadius: 5,
+          padding: 20,
+        }}
+      >
+        Loading...
+      </div>
+    )
+  }
   return (
     <div
       style={{
@@ -44,6 +59,12 @@ const InviteForm = ({ handleSubmit, submitting, onSubmit, inviteErrors }) => {
       }}
     >
       <Form name="invite" onSubmit={handleSubmit(onSubmit)}>
+        <FormGroup>
+          <Label>Company</Label>
+          <div>
+            <Input value={currentUser.company} readOnly />
+          </div>
+        </FormGroup>
         <Field name="name" component={renderField} type="text" label="First Name" validate={required} />
         <Field name="email" component={renderField} type="email" label="Email" validate={required} />
         <Field name="role" component={renderField} type="select" label="Role">
@@ -72,6 +93,8 @@ InviteForm.propTypes = {
   onSubmit: PropTypes.func,
   submitting: PropTypes.bool,
   inviteErrors: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+  currentUser: PropTypes.object,
 }
 
 export default reduxForm({ form: 'invite' })(InviteForm)
