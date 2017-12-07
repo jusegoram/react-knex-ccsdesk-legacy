@@ -5,6 +5,7 @@ const csv = require('csv')
 const Readable = require('stream').Readable
 
 const columns = [
+  'HSP',
   'Activity Due Date',
   'Activity Due Date RT',
   'Planned Start Date RT',
@@ -66,6 +67,7 @@ export default async (req, res) => {
 
   const stream = new Readable({ objectMode: true })
   await results.map(row => {
+    row.data['HSP'] = row.source
     if (row.status == 'Rescheduled') row.data['Status'] = 'Rescheduled'
     if (row.bbe_status) row.data['BBE Status'] = row.bbe_status
     if (row.bbe_category) row.data['BBE OLI Category'] = row.bbe_category
