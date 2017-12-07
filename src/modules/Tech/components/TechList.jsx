@@ -8,7 +8,7 @@ const TechList = ({ techs, selectedTechId, onClick }) => {
     <div style={{ height: '100%' }}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         {techs.map(tech => {
-          const { cid, tech_id: employee_id, first_name, last_name } = tech
+          const { cid, techId: employeeId, firstName, lastName } = tech
           return (
             <div
               key={cid}
@@ -28,9 +28,9 @@ const TechList = ({ techs, selectedTechId, onClick }) => {
             >
               <div>
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {namecase(first_name + ' ' + last_name)}
+                  {namecase(firstName + ' ' + lastName)}
                 </div>
-                <div style={{ lineHeight: '0.8em', fontSize: '0.8em', color: '#888' }}>{employee_id}</div>
+                <div style={{ lineHeight: '0.8em', fontSize: '0.8em', color: '#888' }}>{employeeId}</div>
               </div>
             </div>
           )

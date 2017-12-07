@@ -2,8 +2,8 @@ fragment TechProps on Tech {
   cid
   source
   company
-  tech_id
-  first_name
-  last_name
-  phone_number
+  techId
+  firstName
+  lastName
+  phoneNumber
 }

@@ -1,13 +1,12 @@
 //CCS_UNIQUE MSE9ZJ5SSHC
-const _ = require('lodash')
-const Promise = require('bluebird')
-const Tech = require('./sql').default
-const User = require('../User/sql').default
+import Promise from 'bluebird'
+import { requiresAuth } from '../User/permissions'
+import Tech from './sql'
+import User from '../User/sql'
 
 export default pubsub => ({
   Query: {
-    async techs(obj, { limit, offset, queryString, myTechs }, context) {
-      console.log('techs', myTechs)
+    techs: requiresAuth.createResolver(async (obj, { limit, offset, queryString, myTechs }, context) => {
       const { user } = context
       const { techs, totalCount } = await Promise.props({
         totalCount: Tech.getTotalWithTextFilter({ user, myTechs, queryString }),
@@ -22,10 +21,10 @@ export default pubsub => ({
         hasNextPage: offset + limit < totalCount,
         hasPrevPage: offset > 0,
       }
-    },
-    async tech(obj, { cid }) {
-      return Tech.byId(cid)
-    },
+    }),
+    tech: requiresAuth.createResolver(async (obj, { cid }, context) => {
+      return Tech.byId({ cid, user: context.user })
+    }),
   },
   Mutation: {
     async findManagersForWorker(obj, { techId }) {

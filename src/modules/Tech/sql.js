@@ -1,5 +1,6 @@
 //CCS_UNIQUE V15D1NLSNUD
 import _ from 'lodash'
+import { camelizeKeys } from 'humps'
 import { DateTime } from 'luxon'
 import { knex } from '../../database'
 
@@ -29,14 +30,14 @@ export default class Tech {
     const companyFilter = !user.company
       ? {}
       : user.company === user.hsp ? { source: user.hsp } : { company: user.company }
-    console.log(myTechs)
     const techs = await knex
     .select('techs')
     .from('user')
     .where({ id: user.id })
     .first()
     .get('techs')
-    return await knex
+
+    const results = knex
     .select()
     .from('techs')
     .offset(offset)
@@ -47,10 +48,9 @@ export default class Tech {
     })
     .orderBy('tech_id', 'asc')
     .limit(limit)
-    // .map(camelizeKeys)
-    .map(stringifyGroupNames)
-  }
 
+    return (await results).map(t => stringifyGroupNames(t)).map(t => camelizeKeys(t))
+  }
   static async getTotalWithTextFilter({ user, myTechs, queryString }) {
     const companyFilter = !user.company
       ? {}
@@ -72,13 +72,38 @@ export default class Tech {
     .get('count')
   }
 
-  static byId(cid) {
-    return knex
-    .select()
-    .from('techs')
-    .where({ cid })
-    .first()
-    .then(stringifyGroupNames)
+  static async byId({ cid, user }) {
+    const tech = camelizeKeys(
+      await knex
+      .select()
+      .from('techs')
+      .where({ cid })
+      .first()
+      .then(stringifyGroupNames)
+    )
+    const contacts = camelizeKeys(
+      await knex
+      .select('id', 'first_name', 'last_name', 'role', 'phone_number')
+      .from('user')
+      .where(() => {
+        return !user.company ? {} : { company: user.company }
+      })
+      .whereRaw('techs @> ?', [JSON.stringify(cid)])
+    )
+    tech.contacts = contacts
+    return tech
+  }
+
+  static async getContacts({ cid, user }) {
+    return camelizeKeys(
+      await knex
+      .select('id', 'first_name', 'last_name', 'role', 'phone_number')
+      .from('user')
+      .where(() => {
+        return !user.company ? {} : { company: user.company }
+      })
+      .whereRaw('techs @> ?', [JSON.stringify(cid)])
+    )
   }
 
   static async getTechJobs(techId) {

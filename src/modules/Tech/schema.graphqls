@@ -1,13 +1,22 @@
+type Contact {
+  id: Int!
+  firstName: String
+  lastName: String
+  role: String
+  phoneNumber: String
+}
+
 type Tech {
   cid: String!
-  tech_id: String!
+  techId: String!
   source: String
   company: String
-  first_name: String
-  last_name: String
-  phone_number: String
-  group_names: String
+  firstName: String
+  lastName: String
+  phoneNumber: String
+  groupNames: String
   groups: [String]
+  contacts: [Contact]
 }
 
 type TechPage {

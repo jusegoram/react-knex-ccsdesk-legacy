@@ -3,7 +3,14 @@
 query tech($cid: String!) {
   tech(cid: $cid) {
     ...TechProps
-    group_names
+    groupNames
     groups
+    contacts {
+      id
+      firstName
+      lastName
+      role
+      phoneNumber
+    }
   }
 }

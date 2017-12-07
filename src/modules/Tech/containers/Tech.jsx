@@ -34,14 +34,14 @@ class Tech extends React.Component {
 
     if (!this.fetchingManagers) {
       this.fetchingManagers = true
-      this.props.getManagers(tech.tech_id).then(data => {
+      this.props.getManagers(tech.techId).then(data => {
         const managers = data.data.findManagersForWorker.map(m => JSON.parse(m))
         this.setState({ managers })
       })
     }
-    const group_names = JSON.parse(tech.group_names)
-    const techName = namecase(`${tech.first_name} ${tech.last_name}`)
-          const techphone = tech.phone_number
+    const groupNames = JSON.parse(tech.groupNames)
+    const techName = namecase(`${tech.firstName} ${tech.lastName}`)
+    const techphone = tech.phoneNumber
     const formattedTechPhone = !techphone
       ? 'DNE'
       : `(${techphone.slice(0, 3)}) ${techphone.slice(3, 6)}-${techphone.slice(6, 10)}`
@@ -136,13 +136,13 @@ class Tech extends React.Component {
                       )}
                       <tr>
                         <th>Tech ID</th>
-                        <td>{tech.tech_id}</td>
+                        <td>{tech.techId}</td>
                       </tr>
                       <tr>
                         <th>Phone Number</th>
                         <td>{formattedTechPhone}</td>
                       </tr>
-                      {_.toPairs(group_names).map(pair => (
+                      {_.toPairs(groupNames).map(pair => (
                         <tr key={pair[0] + pair[1]}>
                           <td>{pair[0]}</td>
                           <td>{pair[1]}</td>
@@ -155,37 +155,84 @@ class Tech extends React.Component {
               <Col>
                 <div style={{ minWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
                   <center>
-                    <h4>Contacts</h4>
+                    <h4>Contacts (claimed)</h4>
                   </center>
                   <Table bordered striped>
                     <thead>
                       <tr>
                         <th>Contact</th>
-                        <th>Manages Group</th>
+                        <th>Role</th>
                         <th>Phone Number</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {contactInfos.map((
-                        { managerName, group, formattedPhone } // techManager
-                      ) => (
-                        <tr key={managerName + group.id}>
-                          <td>
-                            {/* <Link to={`/manager/${techManager.id}`}> */}
-                            {namecase(managerName)}
-                            {/* </Link> */}
-                          </td>
-                          <td>
-                            {(group.type === 'SERVICE_REGION' || group.type === 'TECH_TEAM'
-                              ? group.name
-                              : namecase(group.name)) || 'Unknown'}
-                          </td>
-                          <td>{formattedPhone}</td>
+                      {!tech.contacts && (
+                        <tr>
+                          <td colSpan={3}>Loading...</td>
                         </tr>
-                      ))}
+                      )}
+                      {tech.contacts &&
+                        tech.contacts.length === 0 && (
+                          <tr>
+                            <td colSpan={3}>No one has claimed this tech</td>
+                          </tr>
+                        )}
+                      {tech.contacts &&
+                        tech.contacts.length !== 0 &&
+                        tech.contacts.map((
+                          { id, firstName, lastName, role, phoneNumber } // techManager
+                        ) => (
+                          <tr key={id}>
+                            <td>
+                              {/* <Link to={`/manager/${techManager.id}`}> */}
+                              {namecase(`${firstName} ${lastName}`)}
+                              {/* </Link> */}
+                            </td>
+                            <td>{role}</td>
+                            <td>{`(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(
+                              6,
+                              10
+                            )}`}</td>
+                          </tr>
+                        ))}
                     </tbody>
                   </Table>
                 </div>
+                {!currentUser.role && (
+                  <div style={{ minWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
+                    <center>
+                      <h4>Contacts (fallback)</h4>
+                    </center>
+                    <Table bordered striped>
+                      <thead>
+                        <tr>
+                          <th>Contact</th>
+                          <th>Manages Group</th>
+                          <th>Phone Number</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {contactInfos.map((
+                          { managerName, group, formattedPhone } // techManager
+                        ) => (
+                          <tr key={managerName + group.id}>
+                            <td>
+                              {/* <Link to={`/manager/${techManager.id}`}> */}
+                              {namecase(managerName)}
+                              {/* </Link> */}
+                            </td>
+                            <td>
+                              {(group.type === 'SERVICE_REGION' || group.type === 'TECH_TEAM'
+                                ? group.name
+                                : namecase(group.name)) || 'Unknown'}
+                            </td>
+                            <td>{formattedPhone}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                )}
               </Col>
             </Row>
           </Container>
