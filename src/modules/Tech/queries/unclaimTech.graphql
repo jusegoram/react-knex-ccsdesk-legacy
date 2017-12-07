@@ -1,6 +1,12 @@
 mutation unclaimTech($cid: String!) {
   unclaimTech(cid: $cid) {
-    id
-    techs
+    cid
+    contacts {
+      id
+      firstName
+      lastName
+      role
+      phoneNumber
+    }
   }
 }

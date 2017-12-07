@@ -45,7 +45,9 @@ async function renderServerSide(req, res) {
 
     next()
   })
-  const cache = new InMemoryCache()
+  const cache = new InMemoryCache({
+    dataIdFromObject: o => o.cid || o.id,
+  })
 
   let link = new BatchHttpLink({ fetch })
 

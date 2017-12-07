@@ -42,6 +42,6 @@ extend type Query {
 
 extend type Mutation {
   findManagersForWorker(techId: String!): [String]
-  claimTech(cid: String!): User
-  unclaimTech(cid: String!): User
+  claimTech(cid: String!): Tech
+  unclaimTech(cid: String!): Tech
 }

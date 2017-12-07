@@ -29,7 +29,9 @@ before(async () => {
   server = require('../server').default
 
   const fetch = createApolloFetch({ uri: `http://localhost:${process.env['PORT']}/graphql` })
-  const cache = new InMemoryCache()
+  const cache = new InMemoryCache({
+    dataIdFromObject: o => o.cid || o.id,
+  })
   let link = ApolloLink.split(
     operation => {
       const operationAST = getOperationAST(operation.query, operation.operationName)

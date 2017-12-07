@@ -1,6 +1,12 @@
 mutation claimTech($cid: String!) {
   claimTech(cid: $cid) {
-    id
-    techs
+    cid
+    contacts {
+      id
+      firstName
+      lastName
+      role
+      phoneNumber
+    }
   }
 }

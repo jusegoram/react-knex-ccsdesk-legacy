@@ -32,11 +32,13 @@ export default pubsub => ({
     },
     async claimTech(obj, { cid }, context) {
       const userId = context.user.id
-      return await User.addTechToTechsList({ cid, userId, pubsub })
+      await User.addTechToTechsList({ cid, userId, pubsub })
+      return Tech.byId({ cid, user: context.user })
     },
     async unclaimTech(obj, { cid }, context) {
       const userId = context.user.id
-      return await User.removeTechFromTechsList({ cid, userId, pubsub })
+      await User.removeTechFromTechsList({ cid, userId, pubsub })
+      return Tech.byId({ cid, user: context.user })
     },
   },
 })

@@ -31,7 +31,9 @@ const fetch = createApolloFetch({
   uri: __DEV__ ? 'http://localhost:8080/graphql' : 'https://ccsdesk.com/graphql',
   constructOptions: modules.constructFetchOptions,
 })
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({
+  dataIdFromObject: o => o.cid || o.id,
+})
 
 fetch.batchUse(({ requests, options }, next) => {
   try {

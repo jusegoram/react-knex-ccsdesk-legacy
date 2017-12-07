@@ -148,7 +148,9 @@ export default class Renderer {
     })
     addMockFunctionsToSchema({ schema, mocks: graphqlMocks })
 
-    const cache = new InMemoryCache()
+    const cache = new InMemoryCache({
+      dataIdFromObject: o => o.cid || o.id,
+    })
     let link = new MockLink(schema)
 
     const client = new ApolloClient({
