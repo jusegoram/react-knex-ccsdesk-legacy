@@ -44,11 +44,12 @@ class TechSearch extends React.Component {
       })
   }
   async claimSelected() {
-    const { claimTech } = this.props
+    const { claimTech, refetchCurrentUser } = this.props
     const { selected } = this.state
     const selectedTechs = _.values(selected)
     let numSuccesses = 0
-    await Promise.resolve(selectedTechs).map(async tech => {
+    await Promise.resolve(selectedTechs)
+    .map(async tech => {
       try {
         await claimTech({ cid: tech.cid })
         numSuccesses++
@@ -56,15 +57,17 @@ class TechSearch extends React.Component {
         console.error(e)
       }
     })
+    .then(() => refetchCurrentUser())
     if (selectedTechs.length === numSuccesses) alert('All techs have been successfully claimed')
     else alert(`${numSuccesses} out of ${selectedTechs.length} techs were successfully claimed.`)
   }
   async unclaimSelected() {
-    const { unclaimTech } = this.props
+    const { unclaimTech, refetchCurrentUser } = this.props
     const { selected } = this.state
     const selectedTechs = _.values(selected)
     let numSuccesses = 0
-    await Promise.resolve(selectedTechs).map(async tech => {
+    await Promise.resolve(selectedTechs)
+    .map(async tech => {
       try {
         await unclaimTech({ cid: tech.cid })
         numSuccesses++
@@ -72,6 +75,7 @@ class TechSearch extends React.Component {
         console.error(e)
       }
     })
+    .then(() => refetchCurrentUser())
     if (selectedTechs.length === numSuccesses) alert('All techs have been successfully unclaimed')
     else alert(`${numSuccesses} out of ${selectedTechs.length} techs were successfully unclaimed.`)
   }
