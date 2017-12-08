@@ -11,9 +11,21 @@ import { Provider } from 'rebass'
 import LoginView from '../components/LoginView'
 
 import LOGIN from '../queries/Login.graphql'
+import CURRENT_USER_QUERY from '../../util/queries/CurrentUserQuery.graphql'
 
 class Login extends React.Component {
   render() {
+    const { currentUserLoading, currentUser } = this.props
+    if (!currentUserLoading && currentUser) {
+      const { history } = this.props
+      const { company, hsp } = currentUser
+      if (company || hsp) {
+        history.push('/routelogs')
+      } else {
+        history.push('/techs')
+      }
+      return null
+    }
     return (
       <Provider>
         <LoginView {...this.props} />
@@ -24,9 +36,18 @@ class Login extends React.Component {
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
+  currentUserLoading: PropTypes.bool.isRequired,
+  history: PropTypes.object.isRequired,
 }
 
 const LoginWithApollo = compose(
+  graphql(CURRENT_USER_QUERY, {
+    options: { fetchPolicy: 'network-only' },
+    props({ data: { loading, currentUser } }) {
+      return { currentUserLoading: loading, currentUser }
+    },
+  }),
   graphql(LOGIN, {
     props: ({ ownProps: { history, navigation }, mutate }) => ({
       login: async ({ email, password }) => {
