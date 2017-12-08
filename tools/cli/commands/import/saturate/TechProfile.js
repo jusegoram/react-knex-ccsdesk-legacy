@@ -4,7 +4,7 @@ const parseFullName = require('parse-full-name').parseFullName
 const Hash = require('../../../../util/Hash')
 const _ = require('lodash')
 
-const getTechPropsFromCsvRow = ({ source, row }) => {
+const getTechPropsFromCsvRow = ({ knex, source, row }) => {
   const name = parseFullName(row.data['Tech Full Name'])
   const phone_number = row.data['Tech Mobile Phone #']
   const company =
@@ -18,6 +18,15 @@ const getTechPropsFromCsvRow = ({ source, row }) => {
     'Service Region': serviceRegion,
     Team: team,
   }
+  const {
+    'Skill Package': skills,
+    'Tech Schedule': schedule,
+    'Start Latitude': startLatInt,
+    'Start Longitude': startLongInt,
+    'Max Travel Miles': coverageRadiusMiles,
+  } = row.data
+  const start_location = knex.raw('ST_MakePoint(?, ?)::geography', [startLongInt / 1000000, startLatInt / 1000000])
+  const coverage_radius = coverageRadiusMiles * 1609.34
   const filteredGroups = _.pickBy(group_names, _.identity) //remove falsy props
   const groups = _.values(_.mapValues(filteredGroups, (groupName, groupType) => Hash.group({ groupType, groupName })))
   return _.mapValues(
@@ -31,6 +40,10 @@ const getTechPropsFromCsvRow = ({ source, row }) => {
       phone_number,
       group_names,
       groups: JSON.stringify(groups),
+      skills,
+      schedule,
+      start_location,
+      coverage_radius,
     },
     val => (!val ? null : val)
   )
@@ -71,7 +84,7 @@ module.exports = async ({ knex, source, csv_cid }) => {
     .delete()
     // upsert techs that were in the report
     await Promise.resolve(csvRows).mapSeries(async row => {
-      const techProps = getTechPropsFromCsvRow({ source, row })
+      const techProps = getTechPropsFromCsvRow({ knex, source, row })
       const existingTech = await trx
       .select()
       .from('techs')
