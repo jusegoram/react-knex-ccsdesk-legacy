@@ -4,19 +4,21 @@ import { camelizeKeys, decamelize } from 'humps'
 import { DateTime } from 'luxon'
 import { knex } from '../../database'
 
-const getFilterWhereClause = queryString => {
-  if (!queryString) return () => {}
-  const queryStringRegex =
-    '%' +
-    queryString
-    .replace(/\\/g, '\\\\')
-    .replace(/%/g, '\\%')
-    .replace(/_/g, '\\_') +
-    '%'
-  return function() {
-    this.whereRaw('tech_id ~~* ?', [queryStringRegex])
-    .orWhereRaw('first_name ~~* ?', [queryStringRegex])
-    .orWhereRaw('last_name ~~* ?', [queryStringRegex])
+const getWhereFuncFromFilterForUser = user => filter => qb => {
+  console.log(filter)
+  if (filter.id == 'DMA' || filter.id == 'Office') {
+    return qb.whereRaw('group_names->>? ~* ?', [filter.id, filter.value])
+  } else if (filter.id == 'My Tech') {
+    const myTechCids = knex
+    .queryBuilder()
+    .select(knex.raw('jsonb_array_elements_text(techs)'))
+    .from('user')
+    .where({ id: user.id })
+    if (filter.value === 'true') return qb.whereIn('cid', myTechCids)
+    else if (filter.value === 'false') return qb.whereNotIn('cid', myTechCids)
+    else return
+  } else {
+    return qb.where(decamelize(filter.id), '~*', filter.value)
   }
 }
 
@@ -30,12 +32,6 @@ export default class Tech {
     const companyFilter = !user.company
       ? {}
       : user.company === user.hsp ? { source: user.hsp } : { company: user.company }
-    const techs = await knex
-    .select('techs')
-    .from('user')
-    .where({ id: user.id })
-    .first()
-    .get('techs')
 
     let query = knex
     .select()
@@ -44,40 +40,35 @@ export default class Tech {
     .offset(offset)
     .limit(limit)
 
+    const getWhereFuncFromFilter = getWhereFuncFromFilterForUser(user)
+
     filters.forEach(filter => {
-      if (filter.id == 'DMA' || filter.id == 'Office') {
-        query = query.whereRaw('group_names->>? ~* ?', [filter.id, filter.value])
-      } else {
-        query = query.where(decamelize(filter.id), '~*', filter.value)
-      }
+      query = query.where(function() {
+        getWhereFuncFromFilter(filter)(this)
+      })
     })
     sorts.forEach(sort => {
       query = query.orderBy(decamelize(sort.id), sort.desc ? 'desc' : 'asc')
     })
 
+    console.log(query.toString())
     return (await query).map(t => stringifyGroupNames(t)).map(t => camelizeKeys(t))
   }
   static async getTotalWithFilters({ user, filters }) {
     const companyFilter = !user.company
       ? {}
       : user.company === user.hsp ? { source: user.hsp } : { company: user.company }
-    const techs = await knex
-    .select('techs')
-    .from('user')
-    .where({ id: user.id })
-    .first()
-    .get('techs')
 
-    let query = knex('techs')
+    let query = knex
+    .from('techs')
     .count()
     .where(companyFilter)
 
+    const getWhereFuncFromFilter = getWhereFuncFromFilterForUser(user)
     filters.forEach(filter => {
-      if (filter.id == 'DMA' || filter.id == 'Office') {
-        query = query.whereRaw('group_names->>? ~* ?', [filter.id, filter.value])
-      } else {
-        query = query.where(decamelize(filter.id), '~*', filter.value)
-      }
+      query = query.where(function() {
+        getWhereFuncFromFilter(filter)(this)
+      })
     })
 
     return await query.get(0).get('count')

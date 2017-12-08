@@ -40,13 +40,6 @@ export default new Feature({
       </AuthNav>
     </NavItem>,
     <NavItem>
-      <AuthNav role="user" forClients={true}>
-        <NavLink to="/my-techs" className="nav-link">
-          My Techs
-        </NavLink>
-      </AuthNav>
-    </NavItem>,
-    <NavItem>
       <AuthNav role={['Admin', 'Manager']} forClients={true}>
         <NavLink href="/invite-user" to="/invite-user" className="nav-link">
           Invite User

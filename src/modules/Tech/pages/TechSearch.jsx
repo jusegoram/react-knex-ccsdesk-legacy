@@ -5,10 +5,13 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { graphql, compose } from 'react-apollo'
 import ReactTable from 'react-table'
+import { Input } from 'reactstrap'
 
 import PageLayout from '../../util/components/PageLayout'
 
 import TECH_PAGE_QUERY from '../queries/techPage.graphql'
+import CURRENT_USER_QUERY from '../../util/queries/CurrentUserQuery.graphql'
+
 // import TechSearchQuery from '../components/TechSearchQuery'
 // import TechSearchResults from '../components/TechSearchResults'
 
@@ -17,39 +20,56 @@ class TechSearch extends React.Component {
     super(props)
     this.state = { selected: {} }
     this.createSelectCheckbox = this.createSelectCheckbox.bind(this)
+    this.onRowClicked = this.onRowClicked.bind(this)
   }
   createSelectCheckbox({ original }) {
     const { selected } = this.state
-    return (
-      <input
-        type="checkbox"
-        checked={selected[original.cid] || false}
-        onChange={e => {
-          if (e.target.checked)
-            this.setState({
-              selected: { ...selected, [original.cid]: original },
-            })
-          else
-            this.setState({
-              selected: _.omit(selected, original.cid),
-            })
-        }}
-      />
-    )
+    return <input type="checkbox" checked={selected[original.cid] || false} />
   }
+  onRowClicked({ original }) {
+    const { selected } = this.state
+    if (!selected[original.cid])
+      this.setState({
+        selected: { ...selected, [original.cid]: original },
+      })
+    else
+      this.setState({
+        selected: _.omit(selected, original.cid),
+      })
+  }
+
   render() {
-    const { loading, techPage, refetch } = this.props
+    const { techPageLoading, techPage, refetchTechPage, currentUser } = this.props
     const selectedTechs = _.values(this.state.selected)
     const tableProps = {
       data: !techPage ? [] : techPage.techs.map(t => ({ ...t, groupNames: JSON.parse(t.groupNames) })),
       pages: !techPage ? -1 : Math.ceil(techPage.totalCount / techPage.limit),
-      loading: loading,
+      loading: techPageLoading,
       columns: _.filter([
         {
           Header: '✔',
           filterable: false,
           width: 30,
           Cell: this.createSelectCheckbox,
+        },
+        {
+          Header: 'Your Tech',
+          width: 100,
+          style: { textAlign: 'center' },
+          id: 'My Tech',
+          Filter: ({ filter, onChange }) => (
+            <Input
+              type="select"
+              onChange={event => onChange(event.target.value === 'all' ? 'null' : event.target.value)}
+              style={{ width: '100%' }}
+              value={filter && filter.value}
+            >
+              <option value="all">All</option>
+              <option value={true}>Yes</option>
+              <option value={false}>No</option>
+            </Input>
+          ),
+          Cell: ({ original: { cid } }) => (currentUser.techs.indexOf(cid) === -1 ? 'No' : 'Yes'),
         },
         { Header: 'Tech Id', accessor: 'techId' },
         { Header: 'First Name', accessor: 'firstName' },
@@ -62,14 +82,15 @@ class TechSearch extends React.Component {
     }
 
     const onFetchData = state => {
-      if (loading) return
+      if (techPageLoading) return
+      console.log('fetch', state)
       const refetchVariables = {
         offset: state.page * state.pageSize,
         limit: state.pageSize,
         sorts: state.sorted,
         filters: state.filtered,
       }
-      refetch(refetchVariables)
+      refetchTechPage(refetchVariables)
     }
 
     return (
@@ -90,6 +111,8 @@ class TechSearch extends React.Component {
             style={{ backgroundColor: 'white' }}
             filterable
             manual
+            className="-striped -highlight"
+            getTrProps={(state, data) => ({ onClick: () => data && this.onRowClicked({ original: data.original }) })}
             onFetchData={onFetchData}
             {...tableProps}
           />
@@ -100,9 +123,12 @@ class TechSearch extends React.Component {
 }
 
 TechSearch.propTypes = {
-  loading: PropTypes.bool.isRequired,
+  techPageLoading: PropTypes.bool.isRequired,
   techPage: PropTypes.object,
-  refetch: PropTypes.func.isRequired,
+  refetchTechPage: PropTypes.func.isRequired,
+  currentUserLoading: PropTypes.bool.isRequired,
+  currentUser: PropTypes.object,
+  refetchCurrentUser: PropTypes.func.isRequired,
 }
 
 export default compose(
@@ -111,6 +137,18 @@ export default compose(
       fetchPolicy: 'network-only',
       variables: { limit: 20, offset: 0, sorts: [], filters: [] },
     }),
-    props: ({ data: { loading, techPage, refetch } }) => ({ loading, techPage, refetch }),
+    props: ({ data: { loading, techPage, refetch } }) => ({
+      techPageLoading: loading,
+      techPage,
+      refetchTechPage: refetch,
+    }),
+  }),
+  graphql(CURRENT_USER_QUERY, {
+    options: () => ({
+      fetchPolicy: 'cache-and-network',
+    }),
+    props: ({ data: { loading, currentUser, refetch } }) => {
+      return { currentUserLoading: loading, currentUser, refetchCurrentUser: refetch }
+    },
   })
 )(TechSearch)
