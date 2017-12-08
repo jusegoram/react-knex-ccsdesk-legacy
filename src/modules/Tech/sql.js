@@ -79,11 +79,18 @@ export default class Tech {
   static async byId({ cid, user }) {
     const tech = camelizeKeys(
       await knex
-      .select()
+      .select('*', knex.raw("ST_AsGeoJSON(start_location)::json->'coordinates' as start_location_coords"))
       .from('techs')
       .where({ cid })
       .first()
       .then(stringifyGroupNames)
+      .then(t => ({
+        ...t,
+        start_location: t.start_location_coords && {
+          longitude: t.start_location_coords[0],
+          latitude: t.start_location_coords[1],
+        },
+      }))
     )
     const contacts = camelizeKeys(
       await knex

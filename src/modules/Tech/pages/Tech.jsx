@@ -120,7 +120,7 @@ class Tech extends React.Component {
             </div>
           </div>
           <div style={{ flex: 1, paddingTop: 10, overflow: 'scroll' }}>
-            <Container style={{ margin: 0 }}>
+            <Container fluid style={{ margin: 0 }}>
               <Row>
                 <Col>
                   <div style={{ minWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -140,16 +140,40 @@ class Tech extends React.Component {
                           </tr>
                         )}
                         <tr>
-                          <th>Tech ID</th>
+                          <th>Tech&nbsp;ID</th>
                           <td>{tech.techId}</td>
                         </tr>
                         <tr>
-                          <th>Phone Number</th>
+                          <th>Phone&nbsp;Number</th>
                           <td>{formattedTechPhone}</td>
+                        </tr>
+                        <tr>
+                          <th>Skills</th>
+                          <td>{tech.skills}</td>
+                        </tr>
+                        <tr>
+                          <th>Schedule</th>
+                          <td>{tech.schedule}</td>
+                        </tr>
+                        <tr>
+                          <th>Start&nbsp;LL</th>
+                          <td>
+                            {tech.startLocation && (
+                              <a
+                                target="_blank"
+                                href={
+                                  'https://www.google.com/maps/' +
+                                  `@${tech.startLocation.latitude},${tech.startLocation.longitude},20z`
+                                }
+                              >
+                                {tech.startLocation.latitude}, {tech.startLocation.longitude}
+                              </a>
+                            )}
+                          </td>
                         </tr>
                         {_.toPairs(groupNames).map(pair => (
                           <tr key={pair[0] + pair[1]}>
-                            <td>{pair[0]}</td>
+                            <th>{pair[0]}</th>
                             <td>{pair[1]}</td>
                           </tr>
                         ))}
@@ -203,41 +227,42 @@ class Tech extends React.Component {
                       </tbody>
                     </Table>
                   </div>
-                  {!currentUser.role && (
-                    <div style={{ minWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
-                      <center>
-                        <h4>Contacts (fallback)</h4>
-                      </center>
-                      <Table bordered striped>
-                        <thead>
-                          <tr>
-                            <th>Contact</th>
-                            <th>Manages Group</th>
-                            <th>Phone Number</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {contactInfos.map((
-                            { managerName, group, formattedPhone } // techManager
-                          ) => (
-                            <tr key={managerName + group.id}>
-                              <td>
-                                {/* <Link to={`/manager/${techManager.id}`}> */}
-                                {namecase(managerName)}
-                                {/* </Link> */}
-                              </td>
-                              <td>
-                                {(group.type === 'SERVICE_REGION' || group.type === 'TECH_TEAM'
-                                  ? group.name
-                                  : namecase(group.name)) || 'Unknown'}
-                              </td>
-                              <td>{formattedPhone}</td>
+                  {currentUser &&
+                    !currentUser.role && (
+                      <div style={{ minWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
+                        <center>
+                          <h4>Contacts (fallback)</h4>
+                        </center>
+                        <Table bordered striped>
+                          <thead>
+                            <tr>
+                              <th>Contact</th>
+                              <th>Manages Group</th>
+                              <th>Phone Number</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    </div>
-                  )}
+                          </thead>
+                          <tbody>
+                            {contactInfos.map((
+                              { managerName, group, formattedPhone } // techManager
+                            ) => (
+                              <tr key={managerName + group.id}>
+                                <td>
+                                  {/* <Link to={`/manager/${techManager.id}`}> */}
+                                  {namecase(managerName)}
+                                  {/* </Link> */}
+                                </td>
+                                <td>
+                                  {(group.type === 'SERVICE_REGION' || group.type === 'TECH_TEAM'
+                                    ? group.name
+                                    : namecase(group.name)) || 'Unknown'}
+                                </td>
+                                <td>{formattedPhone}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+                      </div>
+                    )}
                 </Col>
               </Row>
             </Container>

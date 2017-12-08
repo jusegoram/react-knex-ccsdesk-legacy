@@ -148,6 +148,29 @@ class Tech extends React.Component {
                           <td>{pair[1]}</td>
                         </tr>
                       ))}
+                      <tr>
+                        <th>Skills</th>
+                        <td>{tech.skills}</td>
+                      </tr>
+                      <tr>
+                        <th>Schedule</th>
+                        <td>{tech.schedule}</td>
+                      </tr>
+                      <tr>
+                        <th>Start Location</th>
+                        <td>
+                          {tech.startLocation && (
+                            <a
+                              href={
+                                'https://www.google.com/maps/' +
+                                `@${tech.startLocation.latitude},${tech.startLocation.longitude},20z`
+                              }
+                            >
+                              {tech.startLocation.latitude}, {tech.startLocation.longitude}
+                            </a>
+                          )}
+                        </td>
+                      </tr>
                     </tbody>
                   </Table>
                 </div>

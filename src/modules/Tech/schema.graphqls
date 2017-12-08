@@ -8,6 +8,11 @@ input Filter {
   value: String!
 }
 
+type LatLong {
+  latitude: Float
+  longitude: Float
+}
+
 type Tech {
   cid: String!
   techId: String!
@@ -19,6 +24,10 @@ type Tech {
   groupNames: String
   groups: [String]
   contacts: [User]
+  skills: String
+  schedule: String
+  coverageRadius: Float
+  startLocation: LatLong
 }
 
 type TechPage {

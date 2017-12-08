@@ -12,5 +12,12 @@ query tech($cid: String!) {
       role
       phoneNumber
     }
+    skills
+    schedule
+    coverageRadius
+    startLocation {
+      latitude
+      longitude
+    }
   }
 }
