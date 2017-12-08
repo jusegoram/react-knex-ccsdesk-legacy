@@ -105,6 +105,7 @@ class TechSearch extends React.Component {
           Filter: ({ filter, onChange }) => (
             <Input
               type="select"
+              size="sm"
               onChange={event => onChange(event.target.value === 'all' ? 'null' : event.target.value)}
               style={{ width: '100%' }}
               value={filter && filter.value}
