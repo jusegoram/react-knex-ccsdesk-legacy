@@ -28,7 +28,7 @@ class RoutelogFinder extends React.Component {
           flexDirection: 'column',
           backgroundColor: '#fff',
           borderRight: '5px solid #ccc',
-          width: 300,
+          width: 150,
         }}
       >
         {/* <div style={{ borderBottom: '1px solid #ccc' }}>

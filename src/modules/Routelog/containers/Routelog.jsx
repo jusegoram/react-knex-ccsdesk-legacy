@@ -25,7 +25,9 @@ class Routelog extends React.Component {
 
     const stats = JSON.parse(routelog.stats)
 
-    const activityCount = _.sum(Object.values(stats).map(n => parseInt(n)))
+    const productionCount = _.sum(_.map(_.values(stats), 'Production'))
+    const serviceCount = _.sum(_.map(_.values(stats), 'Service'))
+    const totalCount = productionCount + serviceCount
 
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#fff' }}>
@@ -53,26 +55,47 @@ class Routelog extends React.Component {
           </div>
         </div>
         <div style={{ flex: 1, paddingTop: 10, overflow: 'scroll' }}>
-          <Container style={{ margin: 0 }}>
+          <Container fluid style={{ margin: 0 }}>
             <Row>
               <Col>
-                <h4>Total Count: {activityCount}</h4>
-                <Table bordered striped>
+                <Table bordered striped style={{ textAlign: 'center' }}>
                   <thead>
                     <tr>
-                      <th>Status</th>
+                      <th rowSpan="2">Status</th>
+                      <th colSpan="2">Production</th>
+                      <th colSpan="2">Repairs</th>
+                      <th colSpan="2">All In</th>
+                    </tr>
+                    <tr>
+                      <th>Count</th>
+                      <th>Percentage</th>
+                      <th>Count</th>
+                      <th>Percentage</th>
                       <th>Count</th>
                       <th>Percentage</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.keys(stats).map(status => (
+                    {_.map(stats, (statusStats, status) => (
                       <tr key={status}>
                         <td>{status}</td>
-                        <td>{stats[status]}</td>
-                        <td>{(100 * stats[status] / activityCount).toFixed(1)}%</td>
+                        <td>{statusStats.Production}</td>
+                        <td>{(100 * statusStats.Production / productionCount).toFixed(1)}%</td>
+                        <td>{statusStats.Service}</td>
+                        <td>{(100 * statusStats.Service / serviceCount).toFixed(1)}%</td>
+                        <td>{statusStats.Production + statusStats.Service}</td>
+                        <td>{(100 * (statusStats.Production + statusStats.Service) / totalCount).toFixed(1)}%</td>
                       </tr>
                     ))}
+                    <tr>
+                      <th>Total</th>
+                      <th>{productionCount}</th>
+                      <th>100%</th>
+                      <th>{serviceCount}</th>
+                      <th>100%</th>
+                      <th>{totalCount}</th>
+                      <th>100%</th>
+                    </tr>
                   </tbody>
                 </Table>
               </Col>

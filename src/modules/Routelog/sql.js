@@ -31,7 +31,7 @@ export default class RoutelogImport {
       throw new Error('Unauthorized')
     }
     const routelogInfo = await knex
-    .select('status', knex.raw('count(*)'))
+    .select('status', 'type', knex.raw('count(*)'))
     .from('daily_activities')
     .whereRaw('due_date = date')
     .where('date', date)
@@ -43,13 +43,30 @@ export default class RoutelogImport {
       }
     })
     .groupBy('status')
+    .groupBy('type')
     .orderBy('count', 'desc')
     .map(result => {
       result.date = moment(result.date).format('YYYY-MM-DD')
       return result
     })
     .then(results => {
-      const stats = JSON.stringify(_.mapValues(_.keyBy(results, 'status'), stat => stat.count))
+      const resultsByStatus = _.groupBy(results, 'status')
+      const resultsByTypeByStatus = _.mapValues(resultsByStatus, results =>
+        _.mapValues(
+          {
+            Production: { count: 0 },
+            Service: { count: 0 },
+            // I'm sorry
+            ..._.groupBy(
+              results,
+              result =>
+                ['Former Install', 'New Install', 'Upgrade'].indexOf(result.type) !== -1 ? 'Production' : 'Service'
+            ),
+          },
+          r => _.sumBy(r, s => parseInt(s.count))
+        )
+      )
+      const stats = JSON.stringify(resultsByTypeByStatus)
       return {
         date,
         stats,

@@ -27,7 +27,7 @@ const RoutelogList = ({ routelogs, selectedRoutelog, onClick }) => {
             >
               <div>
                 <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {moment(routelog.date).format('MMMM Do, YYYY')}
+                  {moment(routelog.date).format('MMM Do')}
                 </div>
               </div>
             </div>
