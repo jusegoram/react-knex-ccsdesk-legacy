@@ -7,7 +7,10 @@ const _ = require('lodash')
 const getTechPropsFromCsvRow = ({ source, row }) => {
   const name = parseFullName(row.data['Tech Full Name'])
   const phone_number = row.data['Tech Mobile Phone #']
-  const company = row.data['Tech Type'] == 'W2' ? source : row.data['Tech Type']
+  const company =
+    row.data['Tech Type'] == 'W2'
+      ? source
+      : row.data['Tech Type'] === 'DW Direct INC' ? 'DW DIRECT' : row.data['Tech Type']
   const { DMA: dma, Office: office, 'Service Region': serviceRegion, 'Tech Team ID': team } = row.data
   const group_names = {
     DMA: dma,
