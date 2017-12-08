@@ -8,14 +8,6 @@ input Filter {
   value: String!
 }
 
-type Contact {
-  id: Int!
-  firstName: String
-  lastName: String
-  role: String
-  phoneNumber: String
-}
-
 type Tech {
   cid: String!
   techId: String!
@@ -26,7 +18,7 @@ type Tech {
   phoneNumber: String
   groupNames: String
   groups: [String]
-  contacts: [Contact]
+  contacts: [User]
 }
 
 type TechPage {

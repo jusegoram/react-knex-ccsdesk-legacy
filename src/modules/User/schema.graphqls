@@ -7,6 +7,7 @@ type User {
   email: String
   firstName: String
   lastName: String
+  phoneNumber: String
   techs: [String]
 }
 

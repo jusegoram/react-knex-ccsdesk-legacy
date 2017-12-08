@@ -33,6 +33,8 @@ export default class Tech {
       ? {}
       : user.company === user.hsp ? { source: user.hsp } : { company: user.company }
 
+    if (sorts.length === 0) sorts.push({ id: 'techId', desc: false })
+
     let query = knex
     .select()
     .from('techs')

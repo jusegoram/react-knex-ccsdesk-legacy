@@ -5,12 +5,15 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { graphql, compose } from 'react-apollo'
 import ReactTable from 'react-table'
-import { Input } from 'reactstrap'
+import { Input, Button } from 'reactstrap'
+import Promise from 'bluebird'
 
 import PageLayout from '../../util/components/PageLayout'
 
 import TECH_PAGE_QUERY from '../queries/techPage.graphql'
 import CURRENT_USER_QUERY from '../../util/queries/CurrentUserQuery.graphql'
+import CLAIM_TECH from '../queries/claimTech.graphql'
+import UNCLAIM_TECH from '../queries/unclaimTech.graphql'
 
 // import TechSearchQuery from '../components/TechSearchQuery'
 // import TechSearchResults from '../components/TechSearchResults'
@@ -21,6 +24,8 @@ class TechSearch extends React.Component {
     this.state = { selected: {} }
     this.createSelectCheckbox = this.createSelectCheckbox.bind(this)
     this.onRowClicked = this.onRowClicked.bind(this)
+    this.claimSelected = this.claimSelected.bind(this)
+    this.unclaimSelected = this.unclaimSelected.bind(this)
   }
   createSelectCheckbox({ original }) {
     const { selected } = this.state
@@ -37,7 +42,38 @@ class TechSearch extends React.Component {
         selected: _.omit(selected, original.cid),
       })
   }
-
+  async claimSelected() {
+    const { claimTech } = this.props
+    const { selected } = this.state
+    const selectedTechs = _.values(selected)
+    let numSuccesses = 0
+    await Promise.resolve(selectedTechs).map(async tech => {
+      try {
+        await claimTech({ cid: tech.cid })
+        numSuccesses++
+      } catch (e) {
+        console.error(e)
+      }
+    })
+    if (selectedTechs.length === numSuccesses) alert('All techs have been successfully claimed')
+    else alert(`${numSuccesses} out of ${selectedTechs.length} techs were successfully claimed.`)
+  }
+  async unclaimSelected() {
+    const { unclaimTech } = this.props
+    const { selected } = this.state
+    const selectedTechs = _.values(selected)
+    let numSuccesses = 0
+    await Promise.resolve(selectedTechs).map(async tech => {
+      try {
+        await unclaimTech({ cid: tech.cid })
+        numSuccesses++
+      } catch (e) {
+        console.error(e)
+      }
+    })
+    if (selectedTechs.length === numSuccesses) alert('All techs have been successfully unclaimed')
+    else alert(`${numSuccesses} out of ${selectedTechs.length} techs were successfully unclaimed.`)
+  }
   render() {
     const { techPageLoading, techPage, refetchTechPage, currentUser } = this.props
     const selectedTechs = _.values(this.state.selected)
@@ -46,15 +82,19 @@ class TechSearch extends React.Component {
       pages: !techPage ? -1 : Math.ceil(techPage.totalCount / techPage.limit),
       loading: techPageLoading,
       columns: _.filter([
-        currentUser.role && {
+        currentUser &&
+          currentUser.role && {
           Header: '✔',
           filterable: false,
+          sortable: false,
           width: 30,
           Cell: this.createSelectCheckbox,
         },
-        currentUser.role && {
+        currentUser &&
+          currentUser.role && {
           Header: 'Your Tech',
           width: 100,
+          sortable: false,
           style: { textAlign: 'center' },
           id: 'My Tech',
           Filter: ({ filter, onChange }) => (
@@ -74,16 +114,17 @@ class TechSearch extends React.Component {
         { Header: 'Tech Id', accessor: 'techId' },
         { Header: 'First Name', accessor: 'firstName' },
         { Header: 'Last Name', accessor: 'lastName' },
-        currentUser.role !== null && currentUser.company !== currentUser.hsp && { Header: 'HSP', accessor: 'source' },
-        currentUser.company === currentUser.hsp && { Header: 'Company', accessor: 'company' },
-        { Header: 'DMA', id: 'DMA', accessor: 'groupNames.DMA' },
-        { Header: 'Office', id: 'Office', accessor: 'groupNames.Office' },
+        currentUser &&
+          currentUser.role !== null &&
+          currentUser.company !== currentUser.hsp && { Header: 'HSP', accessor: 'source' },
+        currentUser && currentUser.company === currentUser.hsp && { Header: 'Company', accessor: 'company' },
+        { Header: 'DMA', id: 'DMA', accessor: 'groupNames.DMA', sortable: false },
+        { Header: 'Office', id: 'Office', accessor: 'groupNames.Office', sortable: false },
       ]),
     }
 
     const onFetchData = state => {
       if (techPageLoading) return
-      console.log('fetch', state)
       const refetchVariables = {
         offset: state.page * state.pageSize,
         limit: state.pageSize,
@@ -104,11 +145,23 @@ class TechSearch extends React.Component {
             overflow: 'hidden',
           }}
         >
-          {currentUser.role && (
-            <div style={{ backgroundColor: 'white', padding: 10, marginBottom: 10, borderRadius: 5 }}>
-              {selectedTechs.length} Techs Selected
-            </div>
-          )}
+          {currentUser &&
+            currentUser.role && (
+              <div
+                className="d-flex justify-content-between"
+                style={{ backgroundColor: 'white', padding: 10, marginBottom: 10, borderRadius: 5 }}
+              >
+                <div>{selectedTechs.length} Techs Selected</div>
+                <div className="clearfix">
+                  <Button className="mr-3" size="sm" color="primary" onClick={this.claimSelected}>
+                    Claim All
+                  </Button>
+                  <Button size="sm" color="danger" onClick={this.unclaimSelected}>
+                    Unclaim All
+                  </Button>
+                </div>
+              </div>
+            )}
           <ReactTable
             style={{ backgroundColor: 'white' }}
             filterable
@@ -131,6 +184,8 @@ TechSearch.propTypes = {
   currentUserLoading: PropTypes.bool.isRequired,
   currentUser: PropTypes.object,
   refetchCurrentUser: PropTypes.func.isRequired,
+  claimTech: PropTypes.func.isRequired,
+  unclaimTech: PropTypes.func.isRequired,
 }
 
 export default compose(
@@ -143,6 +198,16 @@ export default compose(
       techPageLoading: loading,
       techPage,
       refetchTechPage: refetch,
+    }),
+  }),
+  graphql(CLAIM_TECH, {
+    props: ({ mutate }) => ({
+      claimTech: ({ cid }) => mutate({ variables: { cid } }),
+    }),
+  }),
+  graphql(UNCLAIM_TECH, {
+    props: ({ mutate }) => ({
+      unclaimTech: ({ cid }) => mutate({ variables: { cid } }),
     }),
   }),
   graphql(CURRENT_USER_QUERY, {
