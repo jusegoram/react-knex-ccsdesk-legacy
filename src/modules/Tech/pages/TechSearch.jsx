@@ -8,7 +8,7 @@ import ReactTable from 'react-table'
 
 import PageLayout from '../../util/components/PageLayout'
 
-import techsQuery from '../queries/techPage.graphql'
+import TECH_PAGE_QUERY from '../queries/techPage.graphql'
 // import TechSearchQuery from '../components/TechSearchQuery'
 // import TechSearchResults from '../components/TechSearchResults'
 
@@ -41,7 +41,7 @@ class TechSearch extends React.Component {
     const { loading, techPage, refetch } = this.props
     const selectedTechs = _.values(this.state.selected)
     const tableProps = {
-      data: !techPage ? [] : techPage.techs,
+      data: !techPage ? [] : techPage.techs.map(t => ({ ...t, groupNames: JSON.parse(t.groupNames) })),
       pages: !techPage ? -1 : Math.ceil(techPage.totalCount / techPage.limit),
       loading: loading,
       columns: _.filter([
@@ -56,9 +56,11 @@ class TechSearch extends React.Component {
         { Header: 'Last Name', accessor: 'lastName' },
         { Header: 'HSP', accessor: 'source' },
         { Header: 'Company', accessor: 'company' },
-        { Header: 'Phone Number', accessor: 'phoneNumber' },
+        { Header: 'DMA', id: 'DMA', accessor: 'groupNames.DMA' },
+        { Header: 'Office', id: 'Office', accessor: 'groupNames.Office' },
       ]),
     }
+
     const onFetchData = state => {
       if (loading) return
       const refetchVariables = {
@@ -104,7 +106,7 @@ TechSearch.propTypes = {
 }
 
 export default compose(
-  graphql(techsQuery, {
+  graphql(TECH_PAGE_QUERY, {
     options: () => ({
       fetchPolicy: 'network-only',
       variables: { limit: 20, offset: 0, sorts: [], filters: [] },

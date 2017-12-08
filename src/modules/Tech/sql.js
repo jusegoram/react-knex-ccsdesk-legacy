@@ -45,7 +45,11 @@ export default class Tech {
     .limit(limit)
 
     filters.forEach(filter => {
-      query = query.where(decamelize(filter.id), '~*', filter.value)
+      if (filter.id == 'DMA' || filter.id == 'Office') {
+        query = query.whereRaw('group_names->>? ~* ?', [filter.id, filter.value])
+      } else {
+        query = query.where(decamelize(filter.id), '~*', filter.value)
+      }
     })
     sorts.forEach(sort => {
       query = query.orderBy(decamelize(sort.id), sort.desc ? 'desc' : 'asc')
@@ -69,7 +73,11 @@ export default class Tech {
     .where(companyFilter)
 
     filters.forEach(filter => {
-      query = query.where(decamelize(filter.id), '~*', filter.value)
+      if (filter.id == 'DMA' || filter.id == 'Office') {
+        query = query.whereRaw('group_names->>? ~* ?', [filter.id, filter.value])
+      } else {
+        query = query.where(decamelize(filter.id), '~*', filter.value)
+      }
     })
 
     return await query.get(0).get('count')

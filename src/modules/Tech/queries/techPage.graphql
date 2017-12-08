@@ -9,6 +9,7 @@ query techPage(
   techPage(limit: $limit, offset: $offset, sorts: $sorts, filters: $filters) {
     techs {
       ...TechProps
+      groupNames
     }
     totalCount
     offset
