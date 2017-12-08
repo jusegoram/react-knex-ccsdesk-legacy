@@ -6,6 +6,7 @@ import Helmet from 'react-helmet'
 import { graphql, compose } from 'react-apollo'
 import ReactTable from 'react-table'
 import { Input, Button } from 'reactstrap'
+import { Link } from 'react-router-dom'
 import Promise from 'bluebird'
 
 import PageLayout from '../../util/components/PageLayout'
@@ -111,7 +112,11 @@ class TechSearch extends React.Component {
           ),
           Cell: ({ original: { cid } }) => (currentUser.techs.indexOf(cid) === -1 ? 'No' : 'Yes'),
         },
-        { Header: 'Tech Id', accessor: 'techId' },
+        {
+          Header: 'Tech Id',
+          accessor: 'techId',
+          Cell: ({ original: { cid, techId } }) => <Link to={`/tech/${cid}`}>{techId}</Link>,
+        },
         { Header: 'First Name', accessor: 'firstName' },
         { Header: 'Last Name', accessor: 'lastName' },
         currentUser &&
