@@ -31,47 +31,38 @@ module.exports = async ({ knex, csv_cid }) => {
     .where({ csv_cid })
     .map(
       async row => {
+        const upsertKey = {
+          date: moment(importData.downloaded_on).format('YYYY-MM-DD'),
+          activity_number: row.data_key,
+        }
         const existingActivity = await trx
         .select()
         .from('daily_activities')
-        .where({
-          activity_number: row.data_key,
-          date: moment(importData.downloaded_on).format('YYYY-MM-DD'),
-        })
+        .where(upsertKey)
         .first()
         const timezone = timezoneMap[row.data['Timezone'].slice(12)]
         const due_date = row.data['Activity Due Date'] && row.data['Activity Due Date'].slice(0, 10)
+        const update = {
+          source: importData.source,
+          company:
+              row.data['Tech Type'] == 'W2'
+                ? null
+                : row.data['Tech Type'] == 'DW Direct INC' ? 'DW DIRECT' : row.data['Tech Type'],
+          status: row.data['Status'],
+          data: row.data,
+          due_date,
+          timezone,
+          type: row.data['Order Type'],
+        }
         if (!existingActivity) {
           await trx.into('daily_activities').insert({
-            date: moment(importData.downloaded_on).format('YYYY-MM-DD'),
-            activity_number: row.data_key,
-            source: importData.source,
-            company:
-                row.data['Tech Type'] == 'W2'
-                  ? null
-                  : row.data['Tech Type'] == 'DW Direct INC' ? 'DW DIRECT' : row.data['Tech Type'],
-            status: row.data['Status'],
-            data: row.data,
-            due_date,
-            timezone,
+            ...upsertKey,
+            ...update,
           })
         } else {
           await trx('daily_activities')
-          .where({
-            date: moment(importData.downloaded_on).format('YYYY-MM-DD'),
-            activity_number: row.data_key,
-          })
-          .update({
-            source: importData.source,
-            company:
-                  row.data['Tech Type'] == 'W2'
-                    ? null
-                    : row.data['Tech Type'] == 'DW Direct INC' ? 'DW DIRECT' : row.data['Tech Type'],
-            status: row.data['Status'],
-            data: row.data,
-            due_date,
-            timezone,
-          })
+          .where(upsertKey)
+          .update(update)
         }
       },
       { concurrency: 100 }
