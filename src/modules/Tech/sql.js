@@ -1,6 +1,6 @@
 //CCS_UNIQUE V15D1NLSNUD
 import _ from 'lodash'
-import { camelizeKeys } from 'humps'
+import { camelizeKeys, decamelize } from 'humps'
 import { DateTime } from 'luxon'
 import { knex } from '../../database'
 
@@ -26,7 +26,7 @@ const stringifyGroupNames = tech => {
 }
 
 export default class Tech {
-  static async searchForWorkersWithText({ user, myTechs, limit, offset, queryString }) {
+  static async searchForWorkersWithText({ user, limit, offset, sorts, filters }) {
     const companyFilter = !user.company
       ? {}
       : user.company === user.hsp ? { source: user.hsp } : { company: user.company }
@@ -37,21 +37,23 @@ export default class Tech {
     .first()
     .get('techs')
 
-    const results = knex
+    let query = knex
     .select()
     .from('techs')
-    .offset(offset)
-    .where(getFilterWhereClause(queryString))
     .where(companyFilter)
-    .where(function() {
-      return !myTechs ? {} : this.whereIn('cid', techs)
-    })
-    .orderBy('tech_id', 'asc')
+    .offset(offset)
     .limit(limit)
 
-    return (await results).map(t => stringifyGroupNames(t)).map(t => camelizeKeys(t))
+    filters.forEach(filter => {
+      query = query.where(decamelize(filter.id), '~*', filter.value)
+    })
+    sorts.forEach(sort => {
+      query = query.orderBy(decamelize(sort.id), sort.desc ? 'desc' : 'asc')
+    })
+
+    return (await query).map(t => stringifyGroupNames(t)).map(t => camelizeKeys(t))
   }
-  static async getTotalWithTextFilter({ user, myTechs, queryString }) {
+  static async getTotalWithFilters({ user, filters }) {
     const companyFilter = !user.company
       ? {}
       : user.company === user.hsp ? { source: user.hsp } : { company: user.company }
@@ -61,15 +63,16 @@ export default class Tech {
     .where({ id: user.id })
     .first()
     .get('techs')
-    return knex('techs')
-    .where(getFilterWhereClause(queryString))
-    .where(companyFilter)
-    .where(function() {
-      return !myTechs ? {} : this.whereIn('cid', techs)
-    })
+
+    let query = knex('techs')
     .count()
-    .get(0)
-    .get('count')
+    .where(companyFilter)
+
+    filters.forEach(filter => {
+      query = query.where(decamelize(filter.id), '~*', filter.value)
+    })
+
+    return await query.get(0).get('count')
   }
 
   static async byId({ cid, user }) {

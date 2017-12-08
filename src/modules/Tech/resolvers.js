@@ -6,11 +6,11 @@ import User from '../User/sql'
 
 export default pubsub => ({
   Query: {
-    techs: requiresAuth.createResolver(async (obj, { limit, offset, queryString, myTechs }, context) => {
+    techPage: requiresAuth.createResolver(async (obj, { limit, offset, sorts, filters }, context) => {
       const { user } = context
       const { techs, totalCount } = await Promise.props({
-        totalCount: Tech.getTotalWithTextFilter({ user, myTechs, queryString }),
-        techs: Tech.searchForWorkersWithText({ limit, offset, myTechs, queryString, user }),
+        totalCount: Tech.getTotalWithFilters({ user, filters }),
+        techs: Tech.searchForWorkersWithText({ limit, offset, sorts, filters, user }),
       })
 
       return {

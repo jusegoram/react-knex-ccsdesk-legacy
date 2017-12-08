@@ -9,8 +9,8 @@ import { NavItem } from 'reactstrap'
 import { AuthRoute, AuthNav } from '../util/components/Auth'
 
 // Component and helpers
-import Techs from './containers/Techs.page'
-import MyTechs from './containers/MyTechs.page'
+// import Techs from './containers/Techs.page'
+// import MyTechs from './containers/MyTechs.page'
 import Invite from '../User/containers/Invite'
 import TechSearch from './pages/TechSearch'
 import reducers from './reducers'
@@ -19,8 +19,8 @@ import Feature from '../ClientFeature'
 
 export default new Feature({
   route: [
-    <AuthRoute role="user" exact path="/tech-lookup" component={Techs} />,
-    <AuthRoute role="user" forClients={true} exact path="/my-techs" component={MyTechs} />,
+    // {/* <AuthRoute role="user" exact path="/tech-lookup" component={Techs} />,
+    // <AuthRoute role="user" forClients={true} exact path="/my-techs" component={MyTechs} />, */}
     <AuthRoute role="user" forClients={true} exact path="/techs" component={TechSearch} />,
     <AuthRoute exact path="/invite-user" role="user" forClients={true} component={Invite} />,
   ],

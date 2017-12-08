@@ -1,0 +1,19 @@
+#import "../Tech.graphql"
+
+query techPage(
+  $limit: Int!
+  $offset: Int!
+  $sorts: [Sort]!
+  $filters: [Filter]!
+) {
+  techPage(limit: $limit, offset: $offset, sorts: $sorts, filters: $filters) {
+    techs {
+      ...TechProps
+    }
+    totalCount
+    offset
+    limit
+    hasNextPage
+    hasPrevPage
+  }
+}

@@ -1,3 +1,13 @@
+input Sort {
+  id: String!
+  desc: Boolean!
+}
+
+input Filter {
+  id: String!
+  value: String!
+}
+
 type Contact {
   id: Int!
   firstName: String
@@ -32,11 +42,11 @@ extend type Query {
   # Tech
   tech(cid: String!): Tech
   # Techs pagination query
-  techs(
-    limit: Int
-    offset: Int
-    myTechs: Boolean
-    queryString: String
+  techPage(
+    limit: Int!
+    offset: Int!
+    sorts: [Sort]!
+    filters: [Filter]!
   ): TechPage
 }
 
