@@ -21,23 +21,14 @@ export default new Feature({
   route: [
     // {/* <AuthRoute role="user" exact path="/tech-lookup" component={Techs} />,
     // <AuthRoute role="user" forClients={true} exact path="/my-techs" component={MyTechs} />, */}
-    <AuthRoute role="user" forClients={true} exact path="/techs" component={TechSearch} />,
+    <AuthRoute role="user" exact path="/techs" component={TechSearch} />,
     <AuthRoute exact path="/invite-user" role="user" forClients={true} component={Invite} />,
   ],
   navItem: [
     <NavItem>
-      <AuthNav role="user">
-        <NavLink to="/tech-lookup" className="nav-link">
-          Techs
-        </NavLink>
-      </AuthNav>
-    </NavItem>,
-    <NavItem>
-      <AuthNav role="user" forClients={true}>
-        <NavLink to="/techs" className="nav-link">
-          Techs
-        </NavLink>
-      </AuthNav>
+      <NavLink to="/techs" className="nav-link">
+        Techs
+      </NavLink>
     </NavItem>,
     <NavItem>
       <AuthNav role={['Admin', 'Manager']} forClients={true}>

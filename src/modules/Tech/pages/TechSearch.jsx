@@ -46,13 +46,13 @@ class TechSearch extends React.Component {
       pages: !techPage ? -1 : Math.ceil(techPage.totalCount / techPage.limit),
       loading: techPageLoading,
       columns: _.filter([
-        {
+        currentUser.role && {
           Header: '✔',
           filterable: false,
           width: 30,
           Cell: this.createSelectCheckbox,
         },
-        {
+        currentUser.role && {
           Header: 'Your Tech',
           width: 100,
           style: { textAlign: 'center' },
@@ -74,8 +74,8 @@ class TechSearch extends React.Component {
         { Header: 'Tech Id', accessor: 'techId' },
         { Header: 'First Name', accessor: 'firstName' },
         { Header: 'Last Name', accessor: 'lastName' },
-        { Header: 'HSP', accessor: 'source' },
-        { Header: 'Company', accessor: 'company' },
+        currentUser.role !== null && currentUser.company !== currentUser.hsp && { Header: 'HSP', accessor: 'source' },
+        currentUser.company === currentUser.hsp && { Header: 'Company', accessor: 'company' },
         { Header: 'DMA', id: 'DMA', accessor: 'groupNames.DMA' },
         { Header: 'Office', id: 'Office', accessor: 'groupNames.Office' },
       ]),
@@ -104,9 +104,11 @@ class TechSearch extends React.Component {
             overflow: 'hidden',
           }}
         >
-          <div style={{ backgroundColor: 'white', padding: 10, marginBottom: 10, borderRadius: 5 }}>
-            {selectedTechs.length} Techs Selected
-          </div>
+          {currentUser.role && (
+            <div style={{ backgroundColor: 'white', padding: 10, marginBottom: 10, borderRadius: 5 }}>
+              {selectedTechs.length} Techs Selected
+            </div>
+          )}
           <ReactTable
             style={{ backgroundColor: 'white' }}
             filterable
