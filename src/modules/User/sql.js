@@ -75,6 +75,16 @@ export default class User {
     )
   }
 
+  async setCompany({ id, company }) {
+    const update = { company: company }
+    if (company == 'Goodman' || company == 'DirectSat') {
+      update.hsp = company
+    }
+    return await knex('user')
+    .where({ id })
+    .update(update)
+  }
+
   async editUser({ id, username, email, isAdmin, isActive, password }) {
     const userPromise = knex('user')
     .update({

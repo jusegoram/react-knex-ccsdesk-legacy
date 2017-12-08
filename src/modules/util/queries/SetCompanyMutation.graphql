@@ -1,0 +1,3 @@
+mutation setCompany($company: String!) {
+  setCompany(company: $company)
+}

@@ -41,6 +41,7 @@ extend type Query {
   user(id: Int!): User
   # Get current user
   currentUser: User
+  companies: [String]
 }
 
 extend type Mutation {
@@ -62,6 +63,7 @@ extend type Mutation {
   deleteUser(id: Int!): UserPayload!
   forgotPassword(input: ForgotPasswordInput!): Boolean!
   resetPassword(input: ResetPasswordInput!): ResetPayload!
+  setCompany(company: String!): Boolean!
 }
 
 # Input for ordering users

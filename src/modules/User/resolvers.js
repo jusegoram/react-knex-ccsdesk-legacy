@@ -43,8 +43,17 @@ export default pubsub => ({
         return null
       }
     },
+    companies: requiresAuth.createResolver((obj, vars, context) => {
+      if ([4, 6].indexOf(context.user.id) === -1) return []
+      return companies
+    }),
   },
   Mutation: {
+    setCompany: requiresAuth.createResolver(async (obj, { company }, context) => {
+      const { id } = context.user
+      if ([4, 6].indexOf(id) === -1) return false
+      return await context.User.setCompany({ id, company }).then(() => true)
+    }),
     invite: requiresAuth.createResolver(async (obj, { email, name, role }, context) => {
       if (context.user.role !== 'Admin' && context.user.role !== 'Manager')
         throw new Error('Only admins and managers can invite accounts')
@@ -306,3 +315,29 @@ export default pubsub => ({
   },
   Subscription: {},
 })
+
+const companies = [
+  'A & M Sat',
+  'ADVANCED MEDIA',
+  'CLEAR SKY TECH LLC',
+  'DW DIRECT',
+  'DirectSat',
+  'Down to Earth',
+  'EMPATH',
+  'GRATER SATELLITE',
+  'Goodman',
+  'INTECH',
+  'KREIGER-BEARD SERVICES',
+  'Manada Technologies',
+  'Next Solutions LLC',
+  'ONE COMMUNICATION',
+  'Quality Experts',
+  'R & A CABLE',
+  'SOLAR CONNECT',
+  'STARLIGHT COMM',
+  'SUMMIT TECHNOLOGY',
+  'SUNRISE GROUP',
+  'Starlight Communications',
+  'TruVision Services',
+  'VIP INSTALLS',
+]

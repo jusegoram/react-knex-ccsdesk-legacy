@@ -10,6 +10,7 @@ import Users from './components/Users'
 import Register from './containers/Register'
 import Login from './containers/Login'
 import Invite from './containers/Invite'
+import RootConfig from './containers/RootConfig'
 import reducers from './reducers'
 
 import { AuthRoute, AuthLogin, AuthProfile, AuthNav } from '../util/components/Auth'
@@ -43,6 +44,7 @@ export default new Feature({
   route: [
     <AuthRoute exact path="/profile" role="user" component={Profile} />,
     <AuthRoute exact path="/users" role="admin" component={Users} />,
+    <AuthRoute exact path="/root" role="admin" component={RootConfig} />,
     // {/* <Route exact path="/users/:id" component={UserEdit} />, */}
     <Route exact path="/register" component={Register} />,
     <Route exact path="/" component={Login} />,
