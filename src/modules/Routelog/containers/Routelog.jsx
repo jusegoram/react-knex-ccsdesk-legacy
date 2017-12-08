@@ -90,9 +90,9 @@ class Routelog extends React.Component {
                     <tr>
                       <th>Total</th>
                       <th>{productionCount}</th>
-                      <th>100%</th>
+                      <th>{(100 * productionCount / totalCount).toFixed(1)}%</th>
                       <th>{serviceCount}</th>
-                      <th>100%</th>
+                      <th>{(100 * serviceCount / totalCount).toFixed(1)}%</th>
                       <th>{totalCount}</th>
                       <th>100%</th>
                     </tr>
