@@ -23,7 +23,7 @@ class TechSearch extends React.Component {
     return (
       <input
         type="checkbox"
-        checked={selected[original.cid]}
+        checked={selected[original.cid] || false}
         onChange={e => {
           if (e.target.checked)
             this.setState({
@@ -49,7 +49,7 @@ class TechSearch extends React.Component {
           Header: '✔',
           filterable: false,
           width: 30,
-          Cell: this.createSelectCheckbox.bind(this),
+          Cell: this.createSelectCheckbox,
         },
         { Header: 'Tech Id', accessor: 'techId' },
         { Header: 'First Name', accessor: 'firstName' },
