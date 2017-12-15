@@ -1,0 +1,3 @@
+mutation logCall($cid: String!, $reason: String!) {
+  logCall(cid: $cid, reason: $reason)
+}

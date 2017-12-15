@@ -101,8 +101,30 @@ export default class Tech {
       })
       .whereRaw('techs @> ?', [JSON.stringify(cid)])
     )
+    // const additionalContacts = !(tech.source == 'Goodman' && tech.company == 'Goodman')
+    //   ? []
+    //   : camelizeKeys(
+    //     // supervisor_id is not a field on techs - needs to be before this change can be deployed
+    //     await knex
+    //     .select('id', 'first_name', 'last_name', 'role', 'phone_number')
+    //     .from('techs')
+    //     .where({ tech_id: tech.supervisorId })
+    //   )
     tech.contacts = contacts
     return tech
+  }
+
+  static async getCallDrivers() {
+    return knex
+    .select('values')
+    .from('reference_enums')
+    .where({ name: 'Call Drivers' })
+    .first()
+    .get('values')
+  }
+
+  static async logCall({ cid, reason, user }) {
+    return knex.into('call_log').insert({ agent_id: user.id, tech_cid: cid, reason })
   }
 
   static async getContacts({ cid, user }) {

@@ -25,6 +25,9 @@ export default pubsub => ({
     tech: requiresAuth.createResolver(async (obj, { cid }, context) => {
       return Tech.byId({ cid, user: context.user })
     }),
+    callDrivers: requiresAuth.createResolver(async () => {
+      return Tech.getCallDrivers()
+    }),
   },
   Mutation: {
     async findManagersForWorker(obj, { techId }) {
@@ -39,6 +42,12 @@ export default pubsub => ({
       const userId = context.user.id
       await User.removeTechFromTechsList({ cid, userId, pubsub })
       return Tech.byId({ cid, user: context.user })
+    },
+    async logCall(obj, { cid, reason }, context) {
+      const { company, hsp } = context.user
+      if (company || hsp) throw new Error('You are not authorized to do that')
+      await Tech.logCall({ cid, reason, user: context.user })
+      return true
     },
   },
 })

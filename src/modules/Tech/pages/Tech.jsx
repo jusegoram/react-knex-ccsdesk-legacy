@@ -7,12 +7,15 @@ import { Container, Row, Col, Table, Button } from 'reactstrap'
 import namecase from 'namecase'
 
 import PageLayout from '../../util/components/PageLayout'
+import LogCallButtons from '../components/LogCallButtons'
 
 import CURRENT_USER_QUERY from '../../util/queries/CurrentUserQuery.graphql'
 import techQuery from '../queries/tech.graphql'
 import claimTech from '../queries/claimTech.graphql'
 import unclaimTech from '../queries/unclaimTech.graphql'
 import findManagersQuery from '../queries/findManagersForWorker.graphql'
+import logCallMutation from '../queries/logCall.graphql'
+import callDriversQuery from '../queries/callDrivers.graphql'
 
 const groupTypePriority = {
   COMPANY: 0,
@@ -23,6 +26,21 @@ const groupTypePriority = {
 }
 
 class Tech extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.toggle = this.toggle.bind(this)
+    this.state = {
+      dropdownOpen: false,
+    }
+  }
+
+  toggle() {
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen,
+    })
+  }
+
   render() {
     const { loading } = this.props
     if (loading) {
@@ -34,7 +52,7 @@ class Tech extends React.Component {
         </PageLayout>
       )
     }
-    const { currentUser, tech, claimTech, unclaimTech } = this.props
+    const { currentUser, tech, claimTech, unclaimTech, callDrivers, logCall } = this.props
 
     if (!this.fetchingManagers) {
       this.fetchingManagers = true
@@ -89,6 +107,16 @@ class Tech extends React.Component {
           >
             <div style={{ lineHeight: '32px', fontSize: '32px' }}>{techName}</div>
             <div>
+              {currentUser &&
+                !currentUser.company &&
+                !currentUser.hsp && (
+                  <LogCallButtons
+                    callDrivers={callDrivers}
+                    onLogCall={async ({ reason }) => {
+                      await logCall({ cid: tech.cid, reason })
+                    }}
+                  />
+                )}
               {currentUser &&
                 currentUser.company &&
                 currentUser.techs.indexOf(tech.cid) === -1 && (
@@ -276,16 +304,21 @@ class Tech extends React.Component {
 Tech.propTypes = {
   loading: PropTypes.bool.isRequired,
   tech: PropTypes.object,
+  logCall: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
   claimTech: PropTypes.func.isRequired,
   unclaimTech: PropTypes.func.isRequired,
   getManagers: PropTypes.func.isRequired,
   refetchCurrentUser: PropTypes.func.isRequired,
+  callDrivers: PropTypes.array,
 }
 
 export default compose(
   graphql(findManagersQuery, {
     props: ({ mutate }) => ({ getManagers: techId => mutate({ variables: { techId } }) }),
+  }),
+  graphql(callDriversQuery, {
+    props: ({ data: { callDrivers } }) => ({ callDrivers }),
   }),
   graphql(techQuery, {
     options: props => {
@@ -305,6 +338,11 @@ export default compose(
   graphql(unclaimTech, {
     props: ({ mutate }) => ({
       unclaimTech: ({ cid }) => mutate({ variables: { cid } }),
+    }),
+  }),
+  graphql(logCallMutation, {
+    props: ({ mutate }) => ({
+      logCall: ({ cid, reason }) => mutate({ variables: { cid, reason } }),
     }),
   }),
   graphql(CURRENT_USER_QUERY, {

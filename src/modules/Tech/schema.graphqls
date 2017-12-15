@@ -49,10 +49,12 @@ extend type Query {
     sorts: [Sort]!
     filters: [Filter]!
   ): TechPage
+  callDrivers: [String]!
 }
 
 extend type Mutation {
   findManagersForWorker(techId: String!): [String]
   claimTech(cid: String!): Tech
   unclaimTech(cid: String!): Tech
+  logCall(cid: String!, reason: String!): Boolean!
 }
