@@ -1,6 +1,7 @@
 exports.up = knex =>
   knex.schema.createTable('call_log', table => {
-    table.integer('agent_id').primary()
+    table.increments('id')
+    table.integer('agent_id')
     table.string('tech_cid')
     table.text('reason')
   })
