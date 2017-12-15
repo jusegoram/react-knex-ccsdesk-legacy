@@ -26,7 +26,9 @@ export default pubsub => ({
       return Tech.byId({ cid, user: context.user })
     }),
     callDrivers: requiresAuth.createResolver(async () => {
-      return Tech.getCallDrivers()
+      const drivers = await Tech.getCallDrivers()
+      console.log(drivers)
+      return drivers
     }),
   },
   Mutation: {
