@@ -113,7 +113,13 @@ class Tech extends React.Component {
                   <LogCallButtons
                     callDrivers={callDrivers}
                     onLogCall={async ({ reason }) => {
-                      await logCall({ cid: tech.cid, reason })
+                      try {
+                        await logCall({ cid: tech.cid, reason })
+                        alert('This call has been recorded.')
+                      } catch (e) {
+                        console.log(e)
+                        alert('An unexpected error occurred while recording this call')
+                      }
                     }}
                   />
                 )}
