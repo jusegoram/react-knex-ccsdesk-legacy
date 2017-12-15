@@ -107,7 +107,8 @@ class Tech extends React.Component {
           >
             <div style={{ lineHeight: '32px', fontSize: '32px' }}>{techName}</div>
             <div>
-              {currentUser &&
+              {callDrivers &&
+                currentUser &&
                 !currentUser.company &&
                 !currentUser.hsp && (
                   <LogCallButtons
