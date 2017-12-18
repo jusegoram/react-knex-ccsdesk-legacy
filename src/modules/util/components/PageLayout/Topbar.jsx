@@ -11,6 +11,7 @@ const Topbar = ({ route }) => {
     '/techs': 'Techs',
     '/managers': 'Managers',
     '/routelogs': 'Routelog Explorer',
+    '/sdcr': 'SDCR',
     '/my-techs': 'My Techs',
     '/invite-user': 'Invite User',
   }

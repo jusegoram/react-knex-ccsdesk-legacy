@@ -1,0 +1,13 @@
+query sdcr($params: SdcrParams!) {
+  sdcr(params: $params) {
+    scopeType
+    scopeName
+    groupType
+    data {
+      groupName
+      numerator
+      denominator
+      percentage
+    }
+  }
+}

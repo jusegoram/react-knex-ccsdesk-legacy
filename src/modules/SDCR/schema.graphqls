@@ -1,0 +1,25 @@
+type SdcrDatum {
+  groupName: String!
+  numerator: Int!
+  denominator: Int!
+  percentage: Float!
+}
+
+type SdcrData {
+  scopeType: String
+  scopeName: String
+  groupType: String!
+  data: [SdcrDatum]!
+}
+
+input SdcrParams {
+  startDate: Date!
+  endDate: Date!
+  scopeType: String
+  scopeName: String
+  groupType: String!
+}
+
+extend type Query {
+  sdcr(params: SdcrParams!): SdcrData
+}
