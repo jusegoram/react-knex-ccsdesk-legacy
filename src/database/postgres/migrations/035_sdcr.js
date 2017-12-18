@@ -1,0 +1,20 @@
+exports.up = knex =>
+  knex.schema.createTable('sdcr', table => {
+    table.increments('id')
+    table.date('imported_on').defaultTo(knex.fn.now())
+    table.date('snapshot_date')
+    table.string('hsp')
+    table.string('subcontractor')
+    table.string('dma')
+    table.string('office')
+    table.string('service_region')
+    table.string('tech_team')
+    table.string('tech_id')
+    table.string('status')
+    table.string('type')
+    table.string('subtype')
+    table.integer('numerator')
+    table.integer('denominator')
+  })
+
+exports.down = knex => knex.schema.dropTable('sdcr')
