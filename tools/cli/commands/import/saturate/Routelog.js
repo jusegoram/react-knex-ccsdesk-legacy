@@ -1,4 +1,4 @@
-const moment = require('moment-timezone')
+const moment = require('moment')
 
 const timezoneMap = {
   'Eastern Time (US & Canada)': 'America/New_York',
@@ -12,6 +12,7 @@ module.exports = async ({ knex, csv_cid }) => {
     .from('downloaded_csvs')
     .where({ cid: csv_cid })
     .first()
+    console.log(importData)
     const activityNumbersInReport = trx
     .select('data_key')
     .from('downloaded_csv_rows')
@@ -19,7 +20,7 @@ module.exports = async ({ knex, csv_cid }) => {
 
     await trx('daily_activities')
     .where({
-      date: moment(importData.downloaded_on).format('YYYY-MM-DD'),
+      date: moment.utc(importData.downloaded_on).format('YYYY-MM-DD'),
       source: importData.source,
     })
     .whereNot({ status: 'Rescheduled' })
@@ -32,7 +33,8 @@ module.exports = async ({ knex, csv_cid }) => {
     .map(
       async row => {
         const upsertKey = {
-          date: moment(importData.downloaded_on).format('YYYY-MM-DD'),
+          source: importData.source,
+          date: moment.utc(importData.downloaded_on).format('YYYY-MM-DD'),
           activity_number: row.data_key,
         }
         const existingActivity = await trx
@@ -43,7 +45,6 @@ module.exports = async ({ knex, csv_cid }) => {
         const timezone = timezoneMap[row.data['Timezone'].slice(12)]
         const due_date = row.data['Activity Due Date'] && row.data['Activity Due Date'].slice(0, 10)
         const update = {
-          source: importData.source,
           company:
               row.data['Tech Type'] == 'W2'
                 ? null

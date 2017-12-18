@@ -1,6 +1,9 @@
 //CCS_UNIQUE TMRIBDU679
-const moment = require('moment')
+const moment = require('moment-timezone')
+
 const Hash = require('../../../util/Hash')
+
+moment.tz.setDefault('America/Chicago')
 
 class CsvDbRecord {
   static async insertRowWithCurrentTime({ knex, source, reportName }) {
