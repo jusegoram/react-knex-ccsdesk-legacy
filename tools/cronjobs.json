@@ -34,5 +34,29 @@
     "command": "ccs import DirectSat BBE",
     "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *",
     "logName": "directsatBBE"
+  },
+  {
+    "comment": "Fetch Goodman Sclosed",
+    "command": "ccs import Goodman Sclosed",
+    "schedule": "0 10 * * *",
+    "logName": "goodmanSclosed"
+  },
+  {
+    "comment": "Fetch DirectSat Sclosed",
+    "command": "ccs import DirectSat Sclosed",
+    "schedule": "0 10 * * *",
+    "logName": "directsatSclosed"
+  },
+  {
+    "comment": "Fetch Goodman Pending",
+    "command": "ccs import Goodman Pending",
+    "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *",
+    "logName": "goodmanPending"
+  },
+  {
+    "comment": "Fetch DirectSat Pending",
+    "command": "ccs import DirectSat Pending",
+    "schedule": "0 0,1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * *",
+    "logName": "directsatPending"
   }
 ]

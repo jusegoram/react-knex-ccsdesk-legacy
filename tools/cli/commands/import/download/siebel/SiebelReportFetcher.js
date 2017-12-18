@@ -5,6 +5,9 @@ const path = require('path')
 const Promise = require('bluebird')
 const Horseman = require('node-horseman')
 const cheerio = require('cheerio')
+const moment = require('moment-timezone')
+
+moment.tz.setDefault('America/Chicago')
 
 const userAgent =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36' +
@@ -38,22 +41,16 @@ class SiebelReportFetcher {
       TechProfile: 'Tech Profile',
       Routelog: 'Route Log - Time - Zones',
       BBE: 'BBE+BBR',
+      Sclosed: 'Sclosed',
+      Pending: 'Pending',
     }
     this.reportParamsPageHandlers = {
-      'FSS_Detail_Closed Activities_V.2': function(horseman, options) {
-        const formatLog = generateFormatLog(options)
-        const getScreenshotPath = generateGetScreenshotPath(options)
-        const { reportParams } = options
-        const params = [reportParams.startDate, reportParams.endDate]
+      Sclosed: function(horseman) {
+        const yesterday = moment().add(-1, 'day')
+        const params = [yesterday.startOf('month').format('YYYY-MM-DD'), yesterday.format('YYYY-MM-DD')]
         horseman = horseman.waitForSelector('.promptEditBoxField')
-        if (options.loggingPrefix) {
-          horseman = horseman.log(formatLog('Report params page opened.'))
-        }
-        if (options.screenshotsDirectory) {
-          horseman = horseman.screenshot(getScreenshotPath('3_reportParamsPageOpened'))
-        }
         return horseman
-        .html('.PromptViewCell table table')
+        .html('.PromptViewCell')
         .then(function(html) {
           let _horseman = this
           const $ = cheerio.load(html)
@@ -66,16 +63,6 @@ class SiebelReportFetcher {
               return (_horseman = _horseman.type(`#${inputId}`, inputValue))
             }
           })
-          return _horseman
-        })
-        .then(function() {
-          let _horseman = this
-          if (options.loggingPrefix) {
-            _horseman = _horseman.log(formatLog('Report params filled out.'))
-          }
-          if (options.screenshotsDirectory) {
-            _horseman = _horseman.screenshot(getScreenshotPath('4_reportParamsFilledOut'))
-          }
           return _horseman
         })
         .then(function() {
