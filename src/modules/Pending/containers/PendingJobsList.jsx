@@ -3,6 +3,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { graphql, compose } from 'react-apollo'
 import { Card, Container, Row, Col } from 'reactstrap'
+import ReactTable from 'react-table'
+import moment from 'moment'
 
 import NEARBY_PENDING_JOBS from '../queries/nearbyPendingJobs.graphql'
 
@@ -20,7 +22,35 @@ class PendingJobsList extends React.Component {
         </Card>
       )
     }
-    return <Card>{JSON.stringify(pendingJobs)}</Card>
+    const columns = [
+      { Header: 'HSP', accessor: 'hsp' },
+      { Header: 'Activity Number', accessor: 'activityNumber' },
+      { Header: 'Status', accessor: 'status' },
+      {
+        Header: 'Due Date',
+        id: 'dueDate',
+        accessor: r => moment(r.dueDate).format('h:mm a MM/DD/YY'),
+        sortMethod: (a, b) => {
+          const mA = moment(a, 'h:mm a MM/DD/YY')
+          const mB = moment(b, 'h:mm a MM/DD/YY')
+          return mA.isBefore(mB) ? -1 : mB.isBefore(mA) ? 1 : 0
+        },
+      },
+      { Header: 'Address', accessor: 'address' },
+      { Header: 'Distance (mi)', accessor: r => parseFloat((r.distance / 1609.34).toFixed(1)), id: 'distance' },
+    ]
+    return (
+      <Card>
+        <ReactTable
+          style={{ backgroundColor: 'white' }}
+          filterable
+          className="-striped -highlight"
+          data={pendingJobs}
+          columns={columns}
+          loading={loading} // Display the loading overlay when we need it
+        />
+      </Card>
+    )
   }
 }
 

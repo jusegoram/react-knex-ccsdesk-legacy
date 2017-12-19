@@ -1,6 +1,10 @@
 type Job {
   activityNumber: String!
   status: String
+  dueDate: DateTime
+  address: String
+  distance: Float
+  hsp: String
 }
 
 extend type Query {

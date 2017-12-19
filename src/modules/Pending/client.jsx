@@ -15,10 +15,10 @@ import PendingJobs from './pages/PendingJobs'
 import Feature from '../ClientFeature'
 
 export default new Feature({
-  route: [<AuthRoute role="user" forClients={true} exact path="/pending-jobs" component={PendingJobs} />],
+  route: [<AuthRoute role="user" exact path="/pending-jobs" component={PendingJobs} />],
   navItem: (
     <NavItem>
-      <AuthNav role="user" forClients={true}>
+      <AuthNav role="user">
         <NavLink to="/pending-jobs" className="nav-link" activeClassName="active">
           Pending Jobs
         </NavLink>
