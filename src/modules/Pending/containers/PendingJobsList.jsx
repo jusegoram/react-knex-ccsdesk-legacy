@@ -48,6 +48,7 @@ class PendingJobsList extends React.Component {
           data={pendingJobs}
           columns={columns}
           loading={loading} // Display the loading overlay when we need it
+          defaultPageSize={10}
         />
       </Card>
     )
