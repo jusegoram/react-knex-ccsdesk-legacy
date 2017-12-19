@@ -113,11 +113,10 @@ export default class User {
     .del()
   }
 
-  async updatePassword(id, newPassword) {
-    const password = await bcrypt.hash(newPassword, 12)
-
-    return knex('auth_local')
-    .update({ password })
-    .where({ user_id: id })
+  async setPassword(email, password) {
+    const passwordHashed = await bcrypt.hash(password, 12)
+    await knex('user')
+    .update({ password: passwordHashed })
+    .where({ email })
   }
 }
