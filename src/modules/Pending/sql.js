@@ -10,7 +10,7 @@ export default class SQL {
     .select('*', knex.raw('ST_Distance(ST_Point(?, ?)::geography, location::geography) as distance', [lng, lat]))
     .from('pending_jobs')
     .whereRaw('ST_Distance(ST_Point(?, ?)::geography, location::geography) < ?', [lng, lat, radiusInMeters])
-    .orderBy(knex.raw('ST_Distance(ST_Point(?, ?)::geography, location::geography)'))
+    .orderBy(knex.raw('ST_Distance(ST_Point(?, ?)::geography, location::geography)', [lng, lat]))
     jobs.forEach(row => {
       row.data.distance = row.distance
       row.data.hsp = row.source
