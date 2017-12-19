@@ -5,8 +5,9 @@ import Reference from './Reference/client'
 import ErrorCodes from './ErrorCode/client'
 import RoutelogDownload from './Routelog/client'
 import User from './User/client'
+import Pending from './Pending/client'
 import pageNotFound from '../client/pageNotFound'
 
 import Feature from './ClientFeature'
 
-export default new Feature(RoutelogDownload, Techs, Managers, Reference, ErrorCodes, User, pageNotFound)
+export default new Feature(RoutelogDownload, Techs, Managers, Reference, ErrorCodes, User, Pending, pageNotFound)

@@ -62,6 +62,7 @@
     "apollo-server-express": "^1.1.6",
     "apollo-upload-server": "^2.0.4",
     "aws-sdk": "^2.162.0",
+    "axios": "^0.17.1",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",

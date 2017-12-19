@@ -1,0 +1,8 @@
+type Job {
+  activityNumber: String!
+  status: String
+}
+
+extend type Query {
+  pendingJobs(address: String!, radius: Float!): [Job]
+}

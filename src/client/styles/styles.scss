@@ -8,6 +8,10 @@ html {
   position: relative;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;

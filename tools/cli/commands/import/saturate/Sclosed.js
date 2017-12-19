@@ -21,8 +21,6 @@ module.exports = async ({ knex, csv_cid }) => {
       numerator: row.data['# of Same Day Activity Closed Count'],
       denominator: row.data['# of Same Day Activity Scheduled Count'],
     }))
-    .then(sdcr_rows => {
-      knex.batchInsert('sdcr', sdcr_rows, 1000)
-    })
+    .then(sdcr_rows => knex.batchInsert('sdcr', sdcr_rows, 1000).transacting(trx))
   })
 }
