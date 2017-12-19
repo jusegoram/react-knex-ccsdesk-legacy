@@ -9,7 +9,7 @@ const API_KEY = 'AIzaSyDUba12IwODm3q0gIBJ7ABxGhINXVRsFfo'
 export default () => ({
   Query: {
     pendingJobs: requiresAuth.createResolver(async (obj, params, context) => {
-      const hsp = context.user.hsp
+      const { hsp, company } = context.user
       const { address, radius } = params
       const encodedAddress = encodeURIComponent(address)
       const result = await axios.get(
@@ -19,7 +19,7 @@ export default () => ({
         return []
       }
       const { lat, lng } = result.data.results[0].geometry.location
-      const jobs = await Sql.getPendingJobsNear({ hsp, lat, lng, radius })
+      const jobs = await Sql.getPendingJobsNear({ hsp, company, lat, lng, radius })
       const mappedJobs = jobs.map(job => ({
         activityNumber: job['Activity Number'],
         status: job['Activity Status'],
