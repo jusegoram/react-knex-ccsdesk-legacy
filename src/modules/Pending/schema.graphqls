@@ -9,6 +9,7 @@ type Job {
   serviceRegion: String
   customerPhone: String
   type: String
+  customerName: String
 }
 
 extend type Query {

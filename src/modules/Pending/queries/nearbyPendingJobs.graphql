@@ -10,5 +10,6 @@ query pendingJobs($address: String!, $radius: Float!) {
     serviceRegion
     customerPhone
     type
+    customerName
   }
 }

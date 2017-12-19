@@ -31,6 +31,7 @@ export default () => ({
         serviceRegion: job['Service Region'],
         customerPhone: job['Main Phone'],
         type: job['Order Sub Type'],
+        customerName: job['Cust Full Name'],
       }))
       return mappedJobs
     }),

@@ -41,6 +41,7 @@ class PendingJobsList extends React.Component {
       { Header: 'DMA', accessor: 'dma' },
       { Header: 'SR', accessor: 'serviceRegion' },
       { Header: 'Cust Phone #', accessor: 'customerPhone' },
+      { Header: 'Cust Name', accessor: 'customerName' },
       { Header: 'Address', accessor: 'address' },
     ]
     return (
