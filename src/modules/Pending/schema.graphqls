@@ -5,6 +5,10 @@ type Job {
   address: String
   distance: Float
   hsp: String
+  dma: String
+  serviceRegion: String
+  customerPhone: String
+  type: String
 }
 
 extend type Query {

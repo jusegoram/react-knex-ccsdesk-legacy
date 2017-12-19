@@ -25,7 +25,9 @@ class PendingJobsList extends React.Component {
     const columns = [
       { Header: 'HSP', accessor: 'hsp' },
       { Header: 'Activity Number', accessor: 'activityNumber' },
+      { Header: 'Order Type', accessor: 'type' },
       { Header: 'Status', accessor: 'status' },
+      { Header: 'Distance (mi)', accessor: r => parseFloat((r.distance / 1609.34).toFixed(1)), id: 'distance' },
       {
         Header: 'Due Date',
         id: 'dueDate',
@@ -36,8 +38,10 @@ class PendingJobsList extends React.Component {
           return mA.isBefore(mB) ? -1 : mB.isBefore(mA) ? 1 : 0
         },
       },
+      { Header: 'DMA', accessor: 'dma' },
+      { Header: 'SR', accessor: 'serviceRegion' },
+      { Header: 'Cust Phone #', accessor: 'customerPhone' },
       { Header: 'Address', accessor: 'address' },
-      { Header: 'Distance (mi)', accessor: r => parseFloat((r.distance / 1609.34).toFixed(1)), id: 'distance' },
     ]
     return (
       <Card>

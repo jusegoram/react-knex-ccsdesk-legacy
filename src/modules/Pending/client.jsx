@@ -18,11 +18,9 @@ export default new Feature({
   route: [<AuthRoute role="user" exact path="/pending-jobs" component={PendingJobs} />],
   navItem: (
     <NavItem>
-      <AuthNav role="user">
-        <NavLink to="/pending-jobs" className="nav-link" activeClassName="active">
-          Pending Jobs
-        </NavLink>
-      </AuthNav>
+      <NavLink to="/pending-jobs" className="nav-link" activeClassName="active">
+        Pending Jobs
+      </NavLink>
     </NavItem>
   ),
   reducer: { pendingJobs: reducers },
