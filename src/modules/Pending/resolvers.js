@@ -23,7 +23,7 @@ export default () => ({
       const mappedJobs = jobs.map(job => ({
         activityNumber: job['Activity Number'],
         status: job['Activity Status'],
-        dueDate: job['Activity Due Date RT'] && moment(job['Activity Due Date RT']).format(),
+        dueDate: job['Activity Due Date RT'] && moment.utc(job['Activity Due Date RT']).format(),
         address: job['Service Addr #'],
         distance: job.distance,
         hsp: job.hsp,

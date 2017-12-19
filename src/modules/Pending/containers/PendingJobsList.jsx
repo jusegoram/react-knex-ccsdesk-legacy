@@ -29,7 +29,7 @@ class PendingJobsList extends React.Component {
       {
         Header: 'Due Date',
         id: 'dueDate',
-        accessor: r => moment(r.dueDate).format('h:mm a MM/DD/YY'),
+        accessor: r => moment.utc(r.dueDate).format('h:mm a MM/DD/YY'),
         sortMethod: (a, b) => {
           const mA = moment(a, 'h:mm a MM/DD/YY')
           const mB = moment(b, 'h:mm a MM/DD/YY')
