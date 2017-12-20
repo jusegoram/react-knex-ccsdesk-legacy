@@ -1,25 +1,17 @@
-type SdcrDatum {
-  groupName: String!
-  numerator: Int!
-  denominator: Int!
-  percentage: Float!
+type TreemapLeaf {
+  cid: String
+  name: String!
+  color: Float!
+  size: Float
 }
 
 type SdcrData {
   scopeType: String
   scopeName: String
   groupType: String!
-  data: [SdcrDatum]!
-}
-
-input SdcrParams {
-  startDate: Date!
-  endDate: Date!
-  scopeType: String
-  scopeName: String
-  groupType: String!
+  data: [TreemapLeaf]
 }
 
 extend type Query {
-  sdcr(params: SdcrParams!): SdcrData
+  sdcr(scopeType: String, scopeName: String, groupType: String!): SdcrData
 }

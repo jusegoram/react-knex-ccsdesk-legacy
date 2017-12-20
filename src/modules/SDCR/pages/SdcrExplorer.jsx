@@ -1,39 +1,48 @@
 //CCS_UNIQUE YXQM4TSPWUH
-import _ from 'lodash'
 import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
+import { connect } from 'react-redux'
 import { graphql, compose } from 'react-apollo'
-import ReactTable from 'react-table'
-import moment from 'moment'
+import { Card } from 'reactstrap'
+import sizeMe from 'react-sizeme'
 
 import PageLayout from '../../util/components/PageLayout'
+import SdcrTreemap from '../components/SdcrTreemap'
+import Toggle from '../components/Toggle'
 
 import SDCR_QUERY from '../queries/sdcr.graphql'
+
+const nextGrouping = {
+  dma: 'service_region',
+  office: 'service_region',
+  service_region: 'tech_team',
+  tech_team: 'tech_id',
+}
 
 class SdcrExplorer extends React.Component {
   constructor(props) {
     super(props)
+    this.onLeafClicked = this.onLeafClicked.bind(this)
+    this.onRollback = this.onRollback.bind(this)
+  }
+  onLeafClicked(leaf) {
+    const { groupType } = this.props.sdcr
+    if (!nextGrouping[groupType]) return
+    const historyItem = {
+      fetchParams: { scopeType: groupType, scopeName: leaf.name, groupType: nextGrouping[groupType] },
+      leaf,
+    }
+    this.props.pushHistoryItem(historyItem)
+  }
+  onRollback(historyItem) {
+    const { history } = this.props
+    const indexOfItem = history.indexOf(historyItem)
+    this.props.setHistory(history.slice(0, indexOfItem + 1))
   }
   render() {
-    const { sdcr, loading } = this.props
-    const columns = [
-      {
-        Header: 'DMA',
-        accessor: 'groupName',
-        filterMethod: (filter, row) => {
-          return (row[filter.id] + '').toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
-        },
-      },
-      { Header: 'Numerator', accessor: 'numerator', filterable: false },
-      {
-        Header: 'Percentage',
-        id: 'percentage',
-        accessor: d => parseFloat(d.percentage).toFixed(1) + '%',
-        filterable: false,
-      },
-    ]
-
+    const { sdcr, history } = this.props
+    const tlgOptions = [{ name: 'DMA', value: 'dma' }, { name: 'Office', value: 'office' }]
     return (
       <PageLayout>
         <Helmet title="CCS Desk - Techs" />
@@ -45,14 +54,34 @@ class SdcrExplorer extends React.Component {
             overflow: 'hidden',
           }}
         >
-          <ReactTable
-            style={{ backgroundColor: 'white' }}
-            filterable
-            className="-striped -highlight"
-            data={sdcr.data}
-            columns={columns}
-            loading={loading} // Display the loading overlay when we need it
-          />
+          <Card style={{ backgroundColor: '#2d3446', padding: 5, marginBottom: 10 }}>
+            <Toggle
+              options={tlgOptions}
+              selected={history[0].fetchParams.groupType}
+              onChange={tlg => {
+                const defaultFetchParams = { scopeType: null, scopeName: null, groupType: tlg }
+                const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
+                this.props.setHistory([defaultHistoryRoot])
+              }}
+            />
+          </Card>
+          <ol className="breadcrumb">
+            {history.map(historyItem => (
+              <li className="breadcrumb-item">
+                <a
+                  href="#"
+                  onClick={() => {
+                    this.onRollback(historyItem)
+                  }}
+                >
+                  {!historyItem.leaf
+                    ? 'All'
+                    : historyItem.leaf.name + ' ' + (historyItem.leaf.color * 100).toFixed(1) + '%'}
+                </a>
+              </li>
+            ))}
+          </ol>
+          {sdcr && <SdcrTreemap data={sdcr.data} onClick={this.onLeafClicked} />}
         </div>
       </PageLayout>
     )
@@ -62,24 +91,39 @@ class SdcrExplorer extends React.Component {
 SdcrExplorer.propTypes = {
   sdcr: PropTypes.object,
   loading: PropTypes.bool.isRequired,
+  pushHistoryItem: PropTypes.func.isRequired,
+  setHistory: PropTypes.func.isRequired,
+  history: PropTypes.array.isRequired,
 }
 
 export default compose(
-  graphql(SDCR_QUERY, {
-    options: () => ({
-      fetchPolicy: 'network-only',
-      variables: {
-        params: {
-          startDate: moment().format('YYYY-MM-DD'),
-          endDate: moment().format('YYYY-MM-DD'),
-          scopeType: null,
-          scopeName: null,
-          groupType: 'dma',
-        },
+  connect(
+    state => ({
+      history: state.sdcr.history,
+    }),
+    dispatch => ({
+      pushHistoryItem(historyItem) {
+        dispatch({
+          type: 'SDCR/PUSH_HISTORY_ITEM',
+          value: historyItem,
+        })
       },
+      setHistory(history) {
+        console.log(history)
+        dispatch({
+          type: 'SDCR/SET_HISTORY',
+          value: history,
+        })
+      },
+    })
+  ),
+  graphql(SDCR_QUERY, {
+    options: props => ({
+      fetchPolicy: 'network-only',
+      variables: props.history[props.history.length - 1].fetchParams,
     }),
     props: ({ data: { loading, sdcr } }) => ({
-      sdcr: sdcr,
+      sdcr,
       loading,
     }),
   })
