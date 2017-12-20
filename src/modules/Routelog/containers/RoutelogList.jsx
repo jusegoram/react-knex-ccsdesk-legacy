@@ -6,7 +6,7 @@ import moment from 'moment'
 const RoutelogList = ({ routelogs, selectedRoutelog, onClick }) => {
   return (
     <div style={{ height: '100%' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         {routelogs.map(routelog => {
           return (
             <div
@@ -16,11 +16,10 @@ const RoutelogList = ({ routelogs, selectedRoutelog, onClick }) => {
                 backgroundColor: routelog.date === selectedRoutelog ? '#ddd' : '#fff',
                 paddingLeft: 15,
                 fontSize: 24,
-                flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-around',
-                maxHeight: 60,
+                height: 50,
                 cursor: 'pointer',
               }}
               onClick={() => onClick(routelog.date)}

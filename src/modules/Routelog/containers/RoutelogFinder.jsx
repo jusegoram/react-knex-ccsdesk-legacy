@@ -29,6 +29,7 @@ class RoutelogFinder extends React.Component {
           backgroundColor: '#fff',
           borderRight: '5px solid #ccc',
           width: 150,
+          overflowY: 'scroll',
         }}
       >
         {/* <div style={{ borderBottom: '1px solid #ccc' }}>
