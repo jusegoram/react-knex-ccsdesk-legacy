@@ -36,6 +36,9 @@ class LoginView extends React.PureComponent {
                 LOG IN
               </r.Heading>
               <LoginForm onSubmit={this.onSubmit(login)} errors={this.state.errors} />
+              {/* <span style={{ width: '100%', textAlign: 'center', display: 'inline-block', marginTop: 20 }}>
+                <a href="/forgot-password">Forgot Password?</a>
+              </span> */}
             </r.Card>
           </r.Measure>
         </r.Flex>

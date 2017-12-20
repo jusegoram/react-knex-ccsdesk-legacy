@@ -27,6 +27,8 @@ Promise.promisifyAll(NodeMailer)
 
 const inviteTemplate = pug.compileFile(path.resolve(__dirname, 'invite.pug'))
 const createInviteHtml = ({ name, token }) => inviteTemplate({ name, token })
+const forgotPasswordTemplate = pug.compileFile(path.resolve(__dirname, 'forgotPassword.pug'))
+const createForgotPasswordHtml = ({ token }) => forgotPasswordTemplate({ token })
 
 export default pubsub => ({
   Query: {
@@ -253,64 +255,27 @@ export default pubsub => ({
         return { errors: e }
       }
     }),
-    async forgotPassword(obj, { input }, context) {
-      try {
-        const localAuth = pick(input, 'email')
-        const user = await context.User.getUserByEmail(localAuth.email)
-
-        if (user && context.mailer) {
-          // async email
-          jwt.sign(
-            { email: user.email, password: user.password },
-            context.SECRET,
-            { expiresIn: '1d' },
-            (err, emailToken) => {
-              // encoded token since react router does not match dots in params
-              const encodedToken = Buffer.from(emailToken).toString('base64')
-              const url = `${context.req.protocol}://${context.req.get('host')}/reset-password/${encodedToken}`
-              context.mailer.sendMail({
-                from: 'Apollo Universal Starter Kit <nxau5pr4uc2jtb6u@ethereal.email>',
-                to: user.email,
-                subject: 'Reset Password',
-                html: `Please click this link to reset your password: <a href="${url}">${url}</a>`,
-              })
-            }
-          )
-        }
-        return true
-      } catch (e) {
-        // always return true so you can't discover users this way
-        return true
+    forgotPassword: async (obj, { email }, context) => {
+      const user = await context.User.getUserByEmail(email)
+      if (!user) return { success: true }
+      const token = jwt.sign({ email }, process.env.FORGOT_PASSWORD_SECRET, { expiresIn: '1d' })
+      await NodeMailer.sendMailAsync({
+        from: 'CCS Desk <info@ccsdesk.com>',
+        to: email,
+        subject: 'Password Reset',
+        html: createForgotPasswordHtml({ token }),
+      })
+      return {
+        success: true,
       }
     },
-    async resetPassword(obj, { input }, context) {
-      try {
-        const e = new FieldError()
-        const reset = pick(input, ['password', 'passwordConfirmation', 'token'])
-        if (reset.password !== reset.passwordConfirmation) {
-          e.setError('password', 'Passwords do not match.')
-        }
-
-        if (reset.password.length < 5) {
-          e.setError('password', 'Password must be 5 characters or more.')
-        }
-        e.throwIf()
-
-        const token = Buffer.from(reset.token, 'base64').toString()
-        const { email, password } = jwt.verify(token, context.SECRET)
-        const user = await context.User.getUserByEmail(email)
-        if (user.password !== password) {
-          e.setError('token', 'Invalid token')
-          e.throwIf()
-        }
-
-        if (user) {
-          await context.User.updatePassword(user.id, reset.password)
-        }
-        return { errors: null }
-      } catch (e) {
-        return { errors: e }
-      }
+    resetPassword: async (obj, { token, password }, context) => {
+      if (password.length < 6) throw new Error('Password too short')
+      const { email } = jwt.verify(token, process.env.FORGOT_PASSWORD_SECRET)
+      console.log('email', email)
+      console.log('password', password)
+      await context.User.setPassword(email, password)
+      return { success: true }
     },
   },
   Subscription: {},

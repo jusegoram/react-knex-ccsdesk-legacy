@@ -61,8 +61,8 @@ extend type Mutation {
   editUser(input: EditUserInput!): UserPayload!
   # Delete a user
   deleteUser(id: Int!): UserPayload!
-  forgotPassword(input: ForgotPasswordInput!): Boolean!
-  resetPassword(input: ResetPasswordInput!): ResetPayload!
+  forgotPassword(email: String!): InviteResponse!
+  resetPassword(token: String!, password: String!): InviteResponse!
   setCompany(company: String!): Boolean!
 }
 

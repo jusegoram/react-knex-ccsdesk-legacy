@@ -1,0 +1,15 @@
+query pendingJobs($address: String!, $radius: Float!) {
+  pendingJobs(address: $address, radius: $radius) {
+    activityNumber
+    status
+    dueDate
+    address
+    distance
+    hsp
+    dma
+    serviceRegion
+    customerPhone
+    type
+    customerName
+  }
+}

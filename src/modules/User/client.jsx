@@ -11,6 +11,8 @@ import Register from './containers/Register'
 import Login from './containers/Login'
 import Invite from './containers/Invite'
 import RootConfig from './containers/RootConfig'
+import ForgotPassword from './containers/ForgotPassword'
+import ResetPassword from './containers/ResetPassword'
 import reducers from './reducers'
 
 import { AuthRoute, AuthLogin, AuthProfile, AuthNav } from '../util/components/Auth'
@@ -48,8 +50,8 @@ export default new Feature({
     // {/* <Route exact path="/users/:id" component={UserEdit} />, */}
     <Route exact path="/register" component={Register} />,
     <Route exact path="/" component={Login} />,
-    // {/* <Route exact path="/forgot-password" component={ForgotPassword} />, */}
-    // {/* <Route exact path="/reset-password/:token" component={ResetPassword} />, */}
+    <Route exact path="/forgot-password" component={ForgotPassword} />,
+    <Route exact path="/reset-password" component={ResetPassword} />,
     <AuthRoute exact path="/invite-user" role="user" forClients={true} component={Invite} />,
   ],
   navItemRight: [

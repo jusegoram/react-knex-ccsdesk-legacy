@@ -14,6 +14,7 @@ const Topbar = ({ route }) => {
     '/sdcr': 'SDCR',
     '/my-techs': 'My Techs',
     '/invite-user': 'Invite User',
+    '/pending-jobs': 'Pending Jobs',
   }
   return (
     <div style={{ height: 70, position: 'relative' }}>

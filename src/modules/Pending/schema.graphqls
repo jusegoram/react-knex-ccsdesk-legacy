@@ -1,0 +1,17 @@
+type Job {
+  activityNumber: String!
+  status: String
+  dueDate: DateTime
+  address: String
+  distance: Float
+  hsp: String
+  dma: String
+  serviceRegion: String
+  customerPhone: String
+  type: String
+  customerName: String
+}
+
+extend type Query {
+  pendingJobs(address: String!, radius: Float!): [Job]
+}
