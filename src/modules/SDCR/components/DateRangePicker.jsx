@@ -7,7 +7,7 @@ import moment from 'moment'
 class DateRangePicker extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
+    this.state = props.defaultRange || {
       start: moment().format('YYYY-MM-DD'),
       end: moment().format('YYYY-MM-DD'),
     }
@@ -25,28 +25,13 @@ class DateRangePicker extends React.Component {
   render() {
     const { start, end } = this.state
     return (
-      <Form inline>
+      <Form inline style={{ position: 'absolute', right: 0 }}>
         <FormGroup>
-          <Label for="exampleDate">Start</Label>
-          <Input
-            type="date"
-            name="date"
-            id="exampleDate"
-            placeholder="date placeholder"
-            value={start}
-            onChange={this.onChange('start')}
-          />
+          <Input type="date" placeholder="date placeholder" value={start} onChange={this.onChange('start')} />
         </FormGroup>
+        <span style={{ color: 'white', fontSize: '20px' }}>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
         <FormGroup>
-          <Label for="exampleDate">End</Label>
-          <Input
-            type="date"
-            name="date"
-            id="exampleDate"
-            placeholder="date placeholder"
-            value={end}
-            onChange={this.onChange('end')}
-          />
+          <Input type="date" placeholder="date placeholder" value={end} onChange={this.onChange('end')} />
         </FormGroup>
       </Form>
     )
@@ -54,6 +39,7 @@ class DateRangePicker extends React.Component {
 }
 
 DateRangePicker.propTypes = {
+  defaultRange: PropTypes.object,
   onChange: PropTypes.func.isRequired,
 }
 

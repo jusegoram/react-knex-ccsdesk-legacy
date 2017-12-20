@@ -1,5 +1,6 @@
 //CCS_UNIQUE DI0N648N3E6
 import { camelizeKeys } from 'humps'
+import moment from 'moment'
 import { knex } from '../../database'
 
 const hspMap = {
@@ -7,7 +8,7 @@ const hspMap = {
   DirectSat: 'DIRECT SAT',
 }
 export default class SdcrSql {
-  static async getSdcrGroupedBy({ hsp, subcontractor, groupType, scopeType, scopeName }) {
+  static async getSdcrGroupedBy({ hsp, subcontractor, groupType, scopeType, scopeName, startDate, endDate }) {
     const companyFilter = hsp ? { hsp: hspMap[hsp] } : { subcontractor }
     const scopeFilter = scopeType && scopeName ? { [scopeType]: scopeName } : {}
     return camelizeKeys(
@@ -20,6 +21,8 @@ export default class SdcrSql {
       .from('sdcr')
       .where(companyFilter)
       .where(scopeFilter)
+      .where('snapshot_date', '>=', startDate)
+      .where('snapshot_date', '<=', endDate)
       .groupBy(groupType)
       .orderBy('color', 'desc')
     )

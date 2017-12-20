@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { Form } from 'reactstrap'
 import { Treemap } from 'react-vis'
 import componentQueries from 'react-component-queries'
-import DateRangePicker from './DateRangePicker'
 
 class SdcrTreemap extends React.Component {
   constructor(props) {

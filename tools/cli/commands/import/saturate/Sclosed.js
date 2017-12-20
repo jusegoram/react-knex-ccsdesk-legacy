@@ -1,7 +1,7 @@
 //CCS_UNIQUE S48THZF76G
 module.exports = async ({ knex, csv_cid }) => {
   await knex.transaction(async trx => {
-    await knex
+    return knex
     .select()
     .from('downloaded_csv_rows')
     .where({ csv_cid })

@@ -13,5 +13,11 @@ type SdcrData {
 }
 
 extend type Query {
-  sdcr(scopeType: String, scopeName: String, groupType: String!): SdcrData
+  sdcr(
+    scopeType: String
+    scopeName: String
+    groupType: String!
+    startDate: String!
+    endDate: String!
+  ): SdcrData
 }

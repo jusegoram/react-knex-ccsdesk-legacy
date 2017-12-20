@@ -47,23 +47,29 @@ class SiebelReportFetcher {
     this.reportParamsPageHandlers = {
       Sclosed: function(horseman) {
         const yesterday = moment().add(-1, 'day')
-        const params = [yesterday.startOf('month').format('YYYY-MM-DD'), yesterday.format('YYYY-MM-DD')]
+        const params = [
+          moment(yesterday)
+          .startOf('month')
+          .format('YYYY-MM-DD'),
+          moment(yesterday).format('YYYY-MM-DD'),
+        ]
         horseman = horseman.waitForSelector('.promptEditBoxField')
         return horseman
         .html('.PromptViewCell')
         .then(function(html) {
           let _horseman = this
           const $ = cheerio.load(html)
-          $('.promptControl input')
-          .toArray()
-          .forEach((el, index) => {
-            const inputId = $(el).attr('id')
-            const inputValue = params[index]
-            if (inputValue != null) {
-              return (_horseman = _horseman.type(`#${inputId}`, inputValue))
-            }
-          })
-          return _horseman
+          return Promise.all(
+            $('.promptControl input')
+            .toArray()
+            .map((el, index) => {
+              const inputId = $(el).attr('id')
+              const inputValue = params[index]
+              if (inputValue != null) {
+                return (_horseman = _horseman.type(`#${inputId}`, inputValue))
+              }
+            })
+          )
         })
         .then(function() {
           return this.click('#gobtn')

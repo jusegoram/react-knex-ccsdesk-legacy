@@ -1,5 +1,17 @@
-query sdcr($scopeType: String, $scopeName: String, $groupType: String!) {
-  sdcr(scopeType: $scopeType, scopeName: $scopeName, groupType: $groupType) {
+query sdcr(
+  $scopeType: String
+  $scopeName: String
+  $groupType: String!
+  $startDate: String!
+  $endDate: String!
+) {
+  sdcr(
+    scopeType: $scopeType
+    scopeName: $scopeName
+    groupType: $groupType
+    startDate: $startDate
+    endDate: $endDate
+  ) {
     scopeType
     scopeName
     groupType
