@@ -12,11 +12,14 @@ class SdcrTreemap extends React.Component {
       hoveredNode: false,
       useCirclePacking: false,
       treemapData: { children: props.data },
+      cursor: null,
     }
+  }
+  _onMouseMove(e) {
+    this.setState({ cursor: { x: e.clientX, y: e.clientY } })
   }
   render() {
     const { data, onClick, size } = this.props
-    console.log(size)
     const { hoveredNode, treemapData, cursor } = this.state
     if (treemapData.children !== data) treemapData.children = data
     const treeProps = {
@@ -34,36 +37,15 @@ class SdcrTreemap extends React.Component {
       mode: 'resquarify',
       getLabel: x => x.name,
     }
-    const tooltipTransformX =
-      hoveredNode && cursor && !cursor.isPositionOutside && cursor.position.x + 300 > cursor.elementDimensions.width
-        ? '-100%'
-        : '0'
-    const tooltipTransformY =
-      hoveredNode && cursor && !cursor.isPositionOutside && cursor.position.y + 100 > cursor.elementDimensions.height
-        ? '-100%'
-        : '15px'
+    const tooltipTransformX = hoveredNode && cursor && cursor.x + 100 > size.width ? '-100%' : '100px'
+    const tooltipTransformY = hoveredNode && cursor && cursor.y + 50 > size.height ? '-100%' : '100px'
     return (
-      <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-        {false &&
-          !cursor.isPositionOutside &&
-          hoveredNode &&
-          cursor && (
-            <div
-              style={{
-                position: 'absolute',
-                left: cursor.position.x,
-                top: cursor.position.y,
-                transform: `translate(${tooltipTransformX}, ${tooltipTransformY})`,
-                zIndex: 10,
-                backgroundColor: '#fff',
-                border: '1px solid black',
-                padding: 2,
-                borderRadius: 3,
-              }}
-            >
-              {hoveredNode.data.name}: {(hoveredNode.data.color * 100).toFixed(1)}%
-            </div>
-          )}
+      <div style={{ width: '100%', height: '100%' }}>
+        {hoveredNode && (
+          <span>
+            {hoveredNode.data.name}: {(hoveredNode.data.color * 100).toFixed(1)}% ({hoveredNode.data.size} total)
+          </span>
+        )}
         <Treemap data={treemapData} {...treeProps} />
       </div>
     )
