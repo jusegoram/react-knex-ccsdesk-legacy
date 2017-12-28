@@ -17,6 +17,7 @@ import addGraphQLSubscriptions from './api/subscriptions'
 import { options as spinConfig } from '../../.spinrc.json'
 import log from '../common/log'
 import routelogDownloadHandler from '../modules/Routelog/downloadHandler'
+import pendingDownloadHandler from '../modules/Pending/downloadHandler'
 import '../client/debug'
 // eslint-disable-next-line import/no-mutable-exports
 let server
@@ -81,6 +82,7 @@ for (const middleware of modules.middlewares) {
 }
 
 app.use('/routelogs/download/:id', routelogDownloadHandler)
+app.use('/pending/download', pendingDownloadHandler)
 app.use('/graphql', (...args) => graphqlMiddleware(...args))
 if (__DEV__) {
   app.use('/graphiql', (...args) => graphiqlMiddleware(...args))

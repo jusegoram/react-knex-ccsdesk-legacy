@@ -1,7 +1,7 @@
 //CCS_UNIQUE YXQM4TSPWUH
 import React from 'react'
 import Helmet from 'react-helmet'
-import { Container, Row, Col } from 'reactstrap'
+import { Container, Row, Col, Button } from 'reactstrap'
 
 import PageLayout from '../../util/components/PageLayout'
 import AddressSearch from '../components/AddressSearch'
@@ -12,9 +12,14 @@ class PendingJobs extends React.Component {
     super(props)
     this.state = { address: null }
     this.onSubmit = this.onSubmit.bind(this)
+    this.download = this.download.bind(this)
   }
   onSubmit(query) {
     this.setState(query)
+  }
+  download() {
+    let baseUrl = __DEV__ ? 'http://localhost:3000' : 'https://ccsdesk.com'
+    window.open(`${baseUrl}/pending/download/`)
   }
   render() {
     const { address, radius } = this.state
@@ -26,6 +31,9 @@ class PendingJobs extends React.Component {
             <Col>
               <AddressSearch address={address} radius={radius} onSubmit={this.onSubmit} />
             </Col>
+            <Button color="primary" style={{ margin: 11 }} onClick={this.download}>
+              Download
+            </Button>
           </Row>
           {address &&
             radius && (

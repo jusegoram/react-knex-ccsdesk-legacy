@@ -28,3 +28,21 @@ export default class SdcrSql {
     )
   }
 }
+
+// const correctedTechs = await knex
+// .select(knex.raw("data->>'Activity ID' as activity_number"), knex.raw("data->>'BGO Snapshot Date' as date"))
+// .from('downloaded_csv_rows')
+// .whereRaw("data->>'BGO Activity Status' IN ('Scheduled', 'Unscheduled', 'Customer Unscheduled')")
+// .where({ csv_cid })
+// .map(badTechJob => {
+//   return knex
+//   .select(
+//     'activity_number',
+//     'date',
+//     knex.raw("data->>'Tech User ID' as tech_id"),
+//     knex.raw("data->>'Tech Team' as tech_team")
+//   )
+//   .from('daily_activities')
+//   .where(badTechJob)
+//   .first()
+// })
