@@ -5,6 +5,8 @@ const defaultFetchParams = {
   scopeType: null,
   scopeName: null,
   groupType: 'dma',
+  dwelling: null,
+  type: 'SDCR_Production',
 }
 const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
 

@@ -20,6 +20,8 @@ module.exports = async ({ knex, csv_cid }) => {
       snapshot_date: row.data['BGO Snapshot Date'],
       numerator: row.data['# of Same Day Activity Closed Count'],
       denominator: row.data['# of Same Day Activity Scheduled Count'],
+      dwelling_type: row.data['Dwelling Type'],
+      activity_number: row.data['Activity ID'],
     }))
     .then(sdcr_rows => knex.batchInsert('sdcr', sdcr_rows, 1000).transacting(trx))
   })

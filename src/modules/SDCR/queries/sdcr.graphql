@@ -2,6 +2,8 @@ query sdcr(
   $scopeType: String
   $scopeName: String
   $groupType: String!
+  $dwelling: String
+  $type: String!
   $startDate: String!
   $endDate: String!
 ) {
@@ -9,6 +11,8 @@ query sdcr(
     scopeType: $scopeType
     scopeName: $scopeName
     groupType: $groupType
+    dwelling: $dwelling
+    type: $type
     startDate: $startDate
     endDate: $endDate
   ) {

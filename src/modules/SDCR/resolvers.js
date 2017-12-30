@@ -7,12 +7,14 @@ export default () => ({
   Query: {
     sdcr: requiresAuth.createResolver(async (obj, params, context) => {
       const { user: { hsp: userHsp, company } } = context
-      const { scopeType, scopeName, groupType, startDate, endDate } = params
+      const { scopeType, scopeName, groupType, dwelling, type, startDate, endDate } = params
       const companyType = userHsp === company ? 'hsp' : 'subcontractor'
       const data = (await Sql.getSdcrGroupedBy({
         [companyType]: company,
         groupType,
         scopeType,
+        dwelling,
+        type,
         scopeName,
         startDate,
         endDate,

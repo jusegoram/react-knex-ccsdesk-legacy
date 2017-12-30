@@ -17,6 +17,8 @@ extend type Query {
     scopeType: String
     scopeName: String
     groupType: String!
+    dwelling: String
+    type: String!
     startDate: String!
     endDate: String!
   ): SdcrData

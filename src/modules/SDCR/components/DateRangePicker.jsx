@@ -27,11 +27,20 @@ class DateRangePicker extends React.Component {
     return (
       <Form inline style={{ position: 'absolute', right: 0 }}>
         <FormGroup>
-          <Input type="date" placeholder="date placeholder" value={start} onChange={this.onChange('start')} />
-        </FormGroup>
-        <span style={{ color: 'white', fontSize: '20px' }}>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
-        <FormGroup>
-          <Input type="date" placeholder="date placeholder" value={end} onChange={this.onChange('end')} />
+          <Input
+            type="date"
+            placeholder="date placeholder"
+            value={start}
+            onChange={this.onChange('start')}
+            style={{ width: 170 }}
+          />
+          <Input
+            type="date"
+            placeholder="date placeholder"
+            value={end}
+            onChange={this.onChange('end')}
+            style={{ width: 170 }}
+          />
         </FormGroup>
       </Form>
     )

@@ -8,7 +8,17 @@ const hspMap = {
   DirectSat: 'DIRECT SAT',
 }
 export default class SdcrSql {
-  static async getSdcrGroupedBy({ hsp, subcontractor, groupType, scopeType, scopeName, startDate, endDate }) {
+  static async getSdcrGroupedBy({
+    hsp,
+    subcontractor,
+    groupType,
+    dwelling,
+    type,
+    scopeType,
+    scopeName,
+    startDate,
+    endDate,
+  }) {
     const companyFilter = hsp ? { hsp: hspMap[hsp] } : { subcontractor }
     const scopeFilter = scopeType && scopeName ? { [scopeType]: scopeName } : {}
     return camelizeKeys(
@@ -21,6 +31,8 @@ export default class SdcrSql {
       .from('sdcr')
       .where(companyFilter)
       .where(scopeFilter)
+      .where(type ? { type } : {})
+      .where(dwelling ? { dwelling_type: dwelling } : {})
       .where('snapshot_date', '>=', startDate)
       .where('snapshot_date', '<=', endDate)
       .groupBy(groupType)

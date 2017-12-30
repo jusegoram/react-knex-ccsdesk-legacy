@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { graphql, compose } from 'react-apollo'
 import { Card, Container, Row, Col } from 'reactstrap'
 import moment from 'moment'
+import _ from 'lodash'
 
 import PageLayout from '../../util/components/PageLayout'
 import SdcrTreemap from '../components/SdcrTreemap'
@@ -49,6 +50,9 @@ class SdcrExplorer extends React.Component {
   render() {
     const { sdcr, history, setDateRange, dateRange } = this.props
     const tlgOptions = [{ name: 'DMA', value: 'dma' }, { name: 'Office', value: 'office' }]
+    const dwellingOptions = [{ name: 'All Dwellings', value: null }, { name: 'Residential', value: 'RESIDENTIAL' }]
+    const typeOptions = [{ name: 'Production', value: 'SDCR_Production' }, { name: 'Repairs', value: 'SDCR_Repairs' }]
+    const fetchParams = history[0].fetchParams
     return (
       <PageLayout>
         <Helmet title="CCS Desk - Techs" />
@@ -63,18 +67,40 @@ class SdcrExplorer extends React.Component {
           <Card style={{ backgroundColor: '#2d3446', padding: 5, marginBottom: 10 }}>
             <Container fluid>
               <Row>
-                <Col>
+                <Col xs="6" xl="3">
                   <Toggle
                     options={tlgOptions}
-                    selected={history[0].fetchParams.groupType}
-                    onChange={tlg => {
-                      const defaultFetchParams = { scopeType: null, scopeName: null, groupType: tlg }
+                    selected={fetchParams.groupType}
+                    onChange={groupType => {
+                      const defaultFetchParams = _.extend(_.clone(fetchParams), { groupType })
                       const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
                       this.props.setHistory([defaultHistoryRoot])
                     }}
                   />
                 </Col>
-                <Col className="ml-auto" style={{ position: 'relative' }}>
+                <Col xs="6" xl="3">
+                  <Toggle
+                    options={dwellingOptions}
+                    selected={fetchParams.dwelling}
+                    onChange={dwelling => {
+                      const defaultFetchParams = _.extend(_.clone(fetchParams), { dwelling })
+                      const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
+                      this.props.setHistory([defaultHistoryRoot])
+                    }}
+                  />
+                </Col>
+                <Col xs="6" xl="2">
+                  <Toggle
+                    options={typeOptions}
+                    selected={fetchParams.type}
+                    onChange={type => {
+                      const defaultFetchParams = _.extend(_.clone(fetchParams), { type })
+                      const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
+                      this.props.setHistory([defaultHistoryRoot])
+                    }}
+                  />
+                </Col>
+                <Col xs="6" xl="4">
                   <DateRangePicker
                     defaultRange={dateRange}
                     onChange={dateRange => {
