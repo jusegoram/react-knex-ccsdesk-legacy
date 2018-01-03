@@ -12,7 +12,7 @@ const Saturate = require('./saturate')
 
 const screenshotsDirectory = path.resolve(__dirname, 'screenshots')
 module.exports = async ({ knex, source, reportName }) => {
-  // const csvDbRecord = await CsvDbRecord.getInstanceById({ knex, source, reportName, cid: 'h30u5o6903jjfd' })
+  // const csvDbRecord = await CsvDbRecord.getInstanceById({ knex, source, reportName, cid: 'h4jw3ttck5y1i' })
   const csvDbRecord = await CsvDbRecord.insertRowWithCurrentTime({ knex, source, reportName })
   try {
     const csvString = await new SiebelReportFetcher(SiebelCredentials[source]).fetchReport(reportName, {

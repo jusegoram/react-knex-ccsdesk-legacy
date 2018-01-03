@@ -1,5 +1,8 @@
 //CCS_UNIQUE S48THZF76G
+const _ = require('lodash')
+
 module.exports = async ({ knex, csv_cid }) => {
+  const regions = _.keyBy(await knex.select().from('regions'), 'service_region')
   await knex.transaction(async trx => {
     return knex
     .select()
@@ -33,6 +36,7 @@ module.exports = async ({ knex, csv_cid }) => {
           dma: row.data['DMA'],
           office: row.data['Office'],
           service_region: row.data['Service Region'],
+          division: (regions[row.data['Service Region']] && regions[row.data['Service Region']].division) || null,
           tech_team: techTeam,
           tech_id: techId,
           status: row.data['BGO Activity Status'] || null,

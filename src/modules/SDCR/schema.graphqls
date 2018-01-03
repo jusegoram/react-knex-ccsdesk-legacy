@@ -1,7 +1,8 @@
 type TreemapLeaf {
   cid: String
   name: String!
-  color: Float!
+  color: String!
+  value: Float!
   size: Float
 }
 

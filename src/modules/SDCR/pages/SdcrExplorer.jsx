@@ -30,12 +30,16 @@ class SdcrExplorer extends React.Component {
   }
   onLeafClicked(leaf) {
     const { groupType } = this.props.sdcr
-    if (!nextGrouping[groupType]) return
+    let newGroup = null
+    if (!nextGrouping[groupType]) {
+      if (groupType !== 'division') return
+      newGroup = this.props.tlg
+    }
     const historyItem = {
       fetchParams: {
         scopeType: groupType,
         scopeName: leaf.name,
-        groupType: nextGrouping[groupType],
+        groupType: newGroup || nextGrouping[groupType],
         date: moment().format('YYYY-MM-DD'),
       },
       leaf,
@@ -48,7 +52,7 @@ class SdcrExplorer extends React.Component {
     this.props.setHistory(history.slice(0, indexOfItem + 1))
   }
   render() {
-    const { sdcr, history, setDateRange, dateRange } = this.props
+    const { sdcr, history, setDateRange, dateRange, tlg } = this.props
     const tlgOptions = [{ name: 'DMA', value: 'dma' }, { name: 'Office', value: 'office' }]
     const dwellingOptions = [{ name: 'All Dwellings', value: null }, { name: 'Residential', value: 'RESIDENTIAL' }]
     const typeOptions = [{ name: 'Production', value: 'SDCR_Production' }, { name: 'Repairs', value: 'SDCR_Repairs' }]
@@ -70,11 +74,10 @@ class SdcrExplorer extends React.Component {
                 <Col xs="6" xl="3">
                   <Toggle
                     options={tlgOptions}
-                    selected={fetchParams.groupType}
-                    onChange={groupType => {
-                      const defaultFetchParams = _.extend(_.clone(fetchParams), { groupType })
-                      const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
-                      this.props.setHistory([defaultHistoryRoot])
+                    selected={tlg}
+                    onChange={tlg => {
+                      console.log(tlg)
+                      this.props.setTlg(tlg)
                     }}
                   />
                 </Col>
@@ -120,9 +123,7 @@ class SdcrExplorer extends React.Component {
                     this.onRollback(historyItem)
                   }}
                 >
-                  {!historyItem.leaf
-                    ? 'All'
-                    : historyItem.leaf.name + ' (' + (historyItem.leaf.color * 100).toFixed(1) + '%)'}
+                  {!historyItem.leaf ? 'All' : historyItem.leaf.name + ' (' + historyItem.leaf.value.toFixed(1) + '%)'}
                 </a>
               </li>
             ))}
@@ -148,6 +149,8 @@ SdcrExplorer.propTypes = {
   setDateRange: PropTypes.func.isRequired,
   history: PropTypes.array.isRequired,
   dateRange: PropTypes.object.isRequired,
+  tlg: PropTypes.string.isRequired,
+  setTlg: PropTypes.func.isRequired,
 }
 
 export default compose(
@@ -155,6 +158,7 @@ export default compose(
     state => ({
       history: state.sdcr.history,
       dateRange: state.sdcr.dateRange,
+      tlg: state.sdcr.tlg,
     }),
     dispatch => ({
       pushHistoryItem(historyItem) {
@@ -173,6 +177,12 @@ export default compose(
         dispatch({
           type: 'SDCR/SET_DATE_RANGE',
           value: dateRange,
+        })
+      },
+      setTlg(tlg) {
+        dispatch({
+          type: 'SDCR/SET_TLG',
+          value: tlg,
         })
       },
     })

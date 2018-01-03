@@ -36,6 +36,8 @@ class SdcrTreemap extends React.Component {
       hideRootNode: true,
       mode: 'resquarify',
       getLabel: x => x.name,
+      getColor: x => x.color,
+      colorType: 'literal',
     }
     const tooltipTransformX = hoveredNode && cursor && cursor.x + 100 > size.width ? '-100%' : '100px'
     const tooltipTransformY = hoveredNode && cursor && cursor.y + 50 > size.height ? '-100%' : '100px'
@@ -43,7 +45,7 @@ class SdcrTreemap extends React.Component {
       <div style={{ width: '100%', height: '100%' }}>
         {hoveredNode && (
           <span>
-            {hoveredNode.data.name}: {(hoveredNode.data.color * 100).toFixed(1)}% ({hoveredNode.data.size} total)
+            {hoveredNode.data.name}: {hoveredNode.data.value.toFixed(1)}% ({hoveredNode.data.size} total)
           </span>
         )}
         <Treemap data={treemapData} {...treeProps} />

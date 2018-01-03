@@ -4,7 +4,7 @@ import moment from 'moment'
 const defaultFetchParams = {
   scopeType: null,
   scopeName: null,
-  groupType: 'dma',
+  groupType: 'division',
   dwelling: null,
   type: 'SDCR_Production',
 }
@@ -20,6 +20,7 @@ const defaultState = {
     .add(-1, 'day')
     .format('YYYY-MM-DD'),
   },
+  tlg: 'dma',
 }
 
 export default function(state = defaultState, action) {
@@ -38,6 +39,11 @@ export default function(state = defaultState, action) {
     return {
       ...state,
       dateRange: action.value,
+    }
+  case 'SDCR/SET_TLG':
+    return {
+      ...state,
+      tlg: action.value,
     }
   default:
     return state
