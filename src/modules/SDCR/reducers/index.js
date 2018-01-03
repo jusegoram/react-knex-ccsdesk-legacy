@@ -5,13 +5,9 @@ const defaultFetchParams = {
   scopeType: null,
   scopeName: null,
   groupType: 'division',
-  dwelling: null,
-  type: 'SDCR_Production',
 }
-const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
-
 const defaultState = {
-  history: [defaultHistoryRoot],
+  history: [],
   dateRange: {
     start: moment()
     .add(-1, 'day')
@@ -21,6 +17,8 @@ const defaultState = {
     .format('YYYY-MM-DD'),
   },
   tlg: 'dma',
+  dwelling: null,
+  type: 'SDCR_Production',
 }
 
 export default function(state = defaultState, action) {
@@ -33,7 +31,17 @@ export default function(state = defaultState, action) {
   case 'SDCR/SET_HISTORY':
     return {
       ...state,
-      history: [...action.value],
+      history: [],
+    }
+  case 'SDCR/SET_DWELLING':
+    return {
+      ...state,
+      dwelling: action.value,
+    }
+  case 'SDCR/SET_TYPE':
+    return {
+      ...state,
+      type: action.value,
     }
   case 'SDCR/SET_DATE_RANGE':
     return {

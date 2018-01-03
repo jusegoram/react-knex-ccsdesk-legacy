@@ -27,6 +27,10 @@ class SdcrExplorer extends React.Component {
     super(props)
     this.onLeafClicked = this.onLeafClicked.bind(this)
     this.onRollback = this.onRollback.bind(this)
+    this.reset = this.reset.bind(this)
+  }
+  reset() {
+    this.props.setHistory()
   }
   onLeafClicked(leaf) {
     const { groupType } = this.props.sdcr
@@ -34,29 +38,27 @@ class SdcrExplorer extends React.Component {
     if (!nextGrouping[groupType]) {
       if (groupType !== 'division') return
       newGroup = this.props.tlg
+    } else {
+      newGroup = nextGrouping[groupType]
     }
-    const historyItem = {
-      fetchParams: {
-        scopeType: groupType,
-        scopeName: leaf.name,
-        groupType: newGroup || nextGrouping[groupType],
-        date: moment().format('YYYY-MM-DD'),
-      },
-      leaf,
-    }
-    this.props.pushHistoryItem(historyItem)
+    this.props.pushHistoryItem({
+      ...leaf,
+      scopeType: groupType,
+      scopeName: leaf.name,
+      groupType: newGroup,
+    })
   }
   onRollback(historyItem) {
-    const { history } = this.props
-    const indexOfItem = history.indexOf(historyItem)
-    this.props.setHistory(history.slice(0, indexOfItem + 1))
+    // const { history } = this.props
+    // const indexOfItem = history.indexOf(historyItem)
+    // console.log('indexOfItem', indexOfItem)
+    // this.props.setHistory(history.slice(0, indexOfItem + 1))
   }
   render() {
-    const { sdcr, history, setDateRange, dateRange, tlg } = this.props
+    const { sdcr, history, setDateRange, dateRange, tlg, dwelling, type } = this.props
     const tlgOptions = [{ name: 'DMA', value: 'dma' }, { name: 'Office', value: 'office' }]
     const dwellingOptions = [{ name: 'All Dwellings', value: null }, { name: 'Residential', value: 'RESIDENTIAL' }]
     const typeOptions = [{ name: 'Production', value: 'SDCR_Production' }, { name: 'Repairs', value: 'SDCR_Repairs' }]
-    const fetchParams = history[0].fetchParams
     return (
       <PageLayout>
         <Helmet title="CCS Desk - Techs" />
@@ -84,22 +86,18 @@ class SdcrExplorer extends React.Component {
                 <Col xs="6" xl="3">
                   <Toggle
                     options={dwellingOptions}
-                    selected={fetchParams.dwelling}
-                    onChange={dwelling => {
-                      const defaultFetchParams = _.extend(_.clone(fetchParams), { dwelling })
-                      const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
-                      this.props.setHistory([defaultHistoryRoot])
+                    selected={dwelling}
+                    onChange={newDwelling => {
+                      this.props.setDwelling(newDwelling)
                     }}
                   />
                 </Col>
                 <Col xs="6" xl="2">
                   <Toggle
                     options={typeOptions}
-                    selected={fetchParams.type}
-                    onChange={type => {
-                      const defaultFetchParams = _.extend(_.clone(fetchParams), { type })
-                      const defaultHistoryRoot = { leaf: null, fetchParams: defaultFetchParams }
-                      this.props.setHistory([defaultHistoryRoot])
+                    selected={type}
+                    onChange={newType => {
+                      this.props.setType(newType)
                     }}
                   />
                 </Col>
@@ -115,16 +113,14 @@ class SdcrExplorer extends React.Component {
             </Container>
           </Card>
           <ol className="breadcrumb">
-            {history.map(historyItem => (
-              <li className="breadcrumb-item" key={historyItem.leaf && historyItem.leaf.cid}>
-                <a
-                  href="#"
-                  onClick={() => {
-                    this.onRollback(historyItem)
-                  }}
-                >
-                  {!historyItem.leaf ? 'All' : historyItem.leaf.name + ' (' + historyItem.leaf.value.toFixed(1) + '%)'}
-                </a>
+            <li className="breadcrumb-item">
+              <a href="#" onClick={this.reset}>
+                All
+              </a>
+            </li>
+            {history.map(leaf => (
+              <li className="breadcrumb-item" key={leaf && leaf.cid}>
+                {leaf.name}
               </li>
             ))}
           </ol>
@@ -146,10 +142,14 @@ SdcrExplorer.propTypes = {
   loading: PropTypes.bool.isRequired,
   pushHistoryItem: PropTypes.func.isRequired,
   setHistory: PropTypes.func.isRequired,
+  setDwelling: PropTypes.func.isRequired,
+  setType: PropTypes.func.isRequired,
   setDateRange: PropTypes.func.isRequired,
   history: PropTypes.array.isRequired,
   dateRange: PropTypes.object.isRequired,
   tlg: PropTypes.string.isRequired,
+  dwelling: PropTypes.string,
+  type: PropTypes.string.isRequired,
   setTlg: PropTypes.func.isRequired,
 }
 
@@ -159,6 +159,8 @@ export default compose(
       history: state.sdcr.history,
       dateRange: state.sdcr.dateRange,
       tlg: state.sdcr.tlg,
+      dwelling: state.sdcr.dwelling,
+      type: state.sdcr.type,
     }),
     dispatch => ({
       pushHistoryItem(historyItem) {
@@ -171,6 +173,18 @@ export default compose(
         dispatch({
           type: 'SDCR/SET_HISTORY',
           value: history,
+        })
+      },
+      setDwelling(dwelling) {
+        dispatch({
+          type: 'SDCR/SET_DWELLING',
+          value: dwelling,
+        })
+      },
+      setType(type) {
+        dispatch({
+          type: 'SDCR/SET_TYPE',
+          value: type,
         })
       },
       setDateRange(dateRange) {
@@ -188,14 +202,23 @@ export default compose(
     })
   ),
   graphql(SDCR_QUERY, {
-    options: props => ({
-      fetchPolicy: 'network-only',
-      variables: {
-        ...props.history[props.history.length - 1].fetchParams,
-        startDate: props.dateRange.start,
-        endDate: props.dateRange.end,
-      },
-    }),
+    options: props => {
+      const latestLeaf = props.history[props.history.length - 1]
+      console.log(latestLeaf)
+      return {
+        fetchPolicy: 'network-only',
+        variables: {
+          // ...props.history[props.history.length - 1].fetchParams,
+          groupType: (latestLeaf && latestLeaf.groupType) || 'division',
+          scopeType: latestLeaf && latestLeaf.scopeType,
+          scopeName: latestLeaf && latestLeaf.scopeName,
+          type: props.type,
+          dwelling: props.dwelling,
+          startDate: props.dateRange.start,
+          endDate: props.dateRange.end,
+        },
+      }
+    },
     props: ({ data: { loading, sdcr } }) => ({
       sdcr,
       loading,
