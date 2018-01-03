@@ -6,6 +6,7 @@ require('babel-polyfill')
 const knex = require('../../src/database').knex
 const prog = require('caporal')
 const importFromSiebel = require('./commands/import')
+const resaturateReport = require('./commands/import/resaturate')
 const crontab = require('./commands/crontab')
 const uniqueFiles = require('./commands/uniqueFiles')
 
@@ -33,6 +34,19 @@ prog
   new RegExp(`^${importFromSiebel.reports.join('|')}$`)
 )
 .action(runFunction(importFromSiebel))
+.command('resaturate', 'resaturate imported report')
+.argument(
+  '<source>',
+  'the source from which to import the report: ' + importFromSiebel.sources.join(', '),
+  new RegExp(`^${importFromSiebel.sources.join('|')}$`)
+)
+.argument(
+  '<reportName>',
+  'the name of the report to import: ' + importFromSiebel.reports.join(', '),
+  new RegExp(`^${importFromSiebel.reports.join('|')}$`)
+)
+.argument('<cid>', 'the cid of the report to resaturate')
+.action(runFunction(resaturateReport))
 .command('crontab', 'synchronize crontab config with computer')
 .argument('<action>', 'what you want to do: test, update', /^(test|update)$/)
 .action(runFunction(crontab))
