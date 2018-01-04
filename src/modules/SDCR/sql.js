@@ -112,6 +112,33 @@ export default class SdcrSql {
 
     return camelizeKeys(results)
   }
+  static async getSdcrRawData({
+    hsp,
+    subcontractor,
+    groupType,
+    dwelling,
+    type,
+    scopeType,
+    scopeName,
+    startDate,
+    endDate,
+  }) {
+    const companyFilter = hsp ? { hsp: hspMap[hsp] } : { subcontractor }
+    const scopeFilter = scopeType && scopeName ? { [scopeType]: scopeName } : {}
+    console.log(startDate)
+    console.log(endDate)
+    const results = await knex
+    .select()
+    .from('sdcr')
+    .where(companyFilter)
+    .where(scopeFilter)
+    .where(type ? { type } : {})
+    .where(dwelling ? { dwelling_type: dwelling } : {})
+    .where('snapshot_date', '>=', startDate)
+    .where('snapshot_date', '<=', endDate)
+
+    return camelizeKeys(results)
+  }
 }
 
 // const correctedTechs = await knex

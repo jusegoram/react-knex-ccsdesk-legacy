@@ -7,6 +7,7 @@ import { graphql, compose } from 'react-apollo'
 import { Card, Container, Row, Col } from 'reactstrap'
 import moment from 'moment'
 import _ from 'lodash'
+import querystring from 'query-string'
 
 import PageLayout from '../../util/components/PageLayout'
 import SdcrTreemap from '../components/SdcrTreemap'
@@ -26,8 +27,8 @@ class SdcrExplorer extends React.Component {
   constructor(props) {
     super(props)
     this.onLeafClicked = this.onLeafClicked.bind(this)
-    this.onRollback = this.onRollback.bind(this)
     this.reset = this.reset.bind(this)
+    this.download = this.download.bind(this)
   }
   reset() {
     this.props.setHistory()
@@ -48,11 +49,21 @@ class SdcrExplorer extends React.Component {
       groupType: newGroup,
     })
   }
-  onRollback(historyItem) {
-    // const { history } = this.props
-    // const indexOfItem = history.indexOf(historyItem)
-    // console.log('indexOfItem', indexOfItem)
-    // this.props.setHistory(history.slice(0, indexOfItem + 1))
+  download() {
+    const props = this.props
+    const latestLeaf = props.history[props.history.length - 1]
+    const urlParams = {
+      groupType: (latestLeaf && latestLeaf.groupType) || 'division',
+      scopeType: latestLeaf && latestLeaf.scopeType,
+      scopeName: latestLeaf && latestLeaf.scopeName,
+      type: props.type,
+      dwelling: props.dwelling,
+      startDate: props.dateRange.start,
+      endDate: props.dateRange.end,
+    }
+    const query = querystring.stringify(urlParams)
+    let baseUrl = __DEV__ ? 'http://localhost:3000' : 'https://ccsdesk.com'
+    window.open(`${baseUrl}/sdcr/download?${query}`)
   }
   render() {
     const { sdcr, history, setDateRange, dateRange, tlg, dwelling, type } = this.props
@@ -123,6 +134,9 @@ class SdcrExplorer extends React.Component {
                 {leaf.name}
               </li>
             ))}
+            <a href="#" className="btn btn-sm btn-primary float-right" onClick={this.download}>
+              Download
+            </a>
           </ol>
           {sdcr && sdcr.data.length === 0 && <Card style={{ padding: 20 }}>No results to display</Card>}
           {sdcr &&
@@ -204,11 +218,9 @@ export default compose(
   graphql(SDCR_QUERY, {
     options: props => {
       const latestLeaf = props.history[props.history.length - 1]
-      console.log(latestLeaf)
       return {
         fetchPolicy: 'network-only',
         variables: {
-          // ...props.history[props.history.length - 1].fetchParams,
           groupType: (latestLeaf && latestLeaf.groupType) || 'division',
           scopeType: latestLeaf && latestLeaf.scopeType,
           scopeName: latestLeaf && latestLeaf.scopeName,
