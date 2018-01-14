@@ -1,9 +1,13 @@
 //CCS_UNIQUE S48THZF76G
 const _ = require('lodash')
+const moment = require('moment')
 
 module.exports = async ({ knex, csv_cid }) => {
   const regions = _.keyBy(await knex.select().from('regions'), 'service_region')
   await knex.transaction(async trx => {
+    await trx('sdcr')
+    .where('snapshot_date', '>=', moment().format('YYYY-MM-DD'))
+    .delete()
     return knex
     .select()
     .from('downloaded_csv_rows')
