@@ -4,6 +4,6 @@ exports.up = knex =>
   })
 
 exports.down = knex =>
-  knex.schema.table('daily_activities', table => {
+  knex.schema.table('sdcr', table => {
     table.dropIndex('activity_number')
   })

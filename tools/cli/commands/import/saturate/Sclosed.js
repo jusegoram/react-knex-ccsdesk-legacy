@@ -10,19 +10,22 @@ module.exports = async ({ knex, csv_cid }) => {
     .where({ csv_cid })
     .map(
       async row => {
-        const status = row.data['BGO Activity Status']
+        const status = row.data['Activity Status (Snapshot)']
         let techId = row.data['Tech ID']
         let techTeam = row.data['Tech Team']
         const date = row.data['BGO Snapshot Date']
         const activity_number = row.data['Activity ID']
-        if (status === 'Scheduled' || status === 'Customer Unscheduled' || status === 'Unscheduled') {
+        if (status !== 'Closed' && status !== 'Pending Closed') {
           const activity = await knex
           .select(knex.raw('data->>\'Tech Team\' as "techTeam"'), knex.raw('data->>\'Tech User ID\' as "techId"'))
-          .from('daily_activities')
-          .where({
-            date,
-            activity_number,
-          })
+          .from('downloaded_csv_rows')
+          .leftJoin('downloaded_csvs', 'csv_cid', 'cid')
+          .where({ report_name: 'Routelog' })
+          .whereRaw('"started_at"::Date = ?', [date])
+          .whereRaw("left(data->>'Activity Due Date', 10)::Date = ?", [date])
+          .whereRaw("data->>'Tech User ID' <> 'UNKNOWN'")
+          .where({ data_key: activity_number })
+          .orderBy('started_at', 'desc')
           .first()
           if (activity) {
             techId = activity.techId
@@ -39,7 +42,7 @@ module.exports = async ({ knex, csv_cid }) => {
           division: (regions[row.data['Service Region']] && regions[row.data['Service Region']].division) || null,
           tech_team: techTeam,
           tech_id: techId,
-          status: row.data['BGO Activity Status'] || null,
+          status: status || null,
           type: row.data['Activity Type (Snapshot)'],
           subtype: row.data['Activity Sub Type (Snapshot)'],
           snapshot_date: date,
@@ -49,7 +52,7 @@ module.exports = async ({ knex, csv_cid }) => {
           activity_number,
         }
       },
-      { concurrency: 100 }
+      { concurrency: 50 }
     )
     .then(sdcr_rows => knex.batchInsert('sdcr', sdcr_rows, 1000).transacting(trx))
   })
