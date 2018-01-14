@@ -1,9 +1,11 @@
 exports.up = knex =>
   knex.schema.table('daily_activities', table => {
-    table.index('activity_number')
+    table.index('status')
+    table.index('type')
   })
 
 exports.down = knex =>
   knex.schema.table('daily_activities', table => {
-    table.dropIndex('activity_number')
+    table.dropIndex('status')
+    table.dropIndex('type')
   })

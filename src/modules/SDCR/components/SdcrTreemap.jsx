@@ -18,6 +18,20 @@ class SdcrTreemap extends React.Component {
   _onMouseMove(e) {
     this.setState({ cursor: { x: e.clientX, y: e.clientY } })
   }
+  getOverallData() {
+    const { treemapData } = this.state
+    if (treemapData.size !== undefined) return
+    treemapData.meta = {
+      size: 0,
+      value: 0,
+    }
+    treemapData.children.forEach(child => {
+      treemapData.meta.size += child.size
+    })
+    treemapData.children.forEach(child => {
+      treemapData.meta.value += child.size / treemapData.meta.size * child.value
+    })
+  }
   render() {
     const { data, onClick, size } = this.props
     const { hoveredNode, treemapData, cursor } = this.state
@@ -30,7 +44,9 @@ class SdcrTreemap extends React.Component {
         stiffness: 300,
       },
       onLeafMouseOver: x => this.setState({ hoveredNode: x }),
+      onLeafMouseOut: () => this.setState({ hoveredNode: null }),
       onLeafClick: x => {
+        this.setState({ hoveredNode: null })
         onClick && onClick(x.data)
       },
       hideRootNode: true,
@@ -41,11 +57,16 @@ class SdcrTreemap extends React.Component {
     }
     const tooltipTransformX = hoveredNode && cursor && cursor.x + 100 > size.width ? '-100%' : '100px'
     const tooltipTransformY = hoveredNode && cursor && cursor.y + 50 > size.height ? '-100%' : '100px'
+    this.getOverallData()
     return (
       <div style={{ width: '100%', height: '100%' }}>
-        {hoveredNode && (
+        {hoveredNode ? (
           <span>
             {hoveredNode.data.name}: {hoveredNode.data.value.toFixed(1)}% ({hoveredNode.data.size} total)
+          </span>
+        ) : (
+          <span>
+            Average: {treemapData.meta.value.toFixed(1)}% ({treemapData.meta.size} total)
           </span>
         )}
         <Treemap data={treemapData} {...treeProps} />
