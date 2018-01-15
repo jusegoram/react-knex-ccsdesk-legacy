@@ -17,11 +17,17 @@ module.exports = async ({ knex, csv_cid }) => {
         const status = row.data['Activity Status (Snapshot)']
         let techId = row.data['Tech ID']
         let techTeam = row.data['Tech Team']
+        let subcontractor =
+            row.data['Subcontractor Company Name'] == 'UNKNOWN' ? null : row.data['Subcontractor Company Name']
         const date = row.data['BGO Snapshot Date']
         const activity_number = row.data['Activity ID']
         if (status !== 'Closed' && status !== 'Pending Closed') {
           const activity = await knex
-          .select(knex.raw('data->>\'Tech Team\' as "techTeam"'), knex.raw('data->>\'Tech User ID\' as "techId"'))
+          .select(
+            knex.raw('data->>\'Tech Team\' as "techTeam"'),
+            knex.raw('data->>\'Tech User ID\' as "techId"'),
+            knex.raw('data->>\'Tech Type\' as "subcontractor"')
+          )
           .from('downloaded_csv_rows')
           .leftJoin('downloaded_csvs', 'csv_cid', 'cid')
           .where({ report_name: 'Routelog' })
@@ -34,12 +40,12 @@ module.exports = async ({ knex, csv_cid }) => {
           if (activity) {
             techId = activity.techId
             techTeam = activity.techTeam
+            subcontractor = activity.subcontractor == 'W2' ? null : activity.subcontractor
           }
         }
         return {
           hsp: row.data['HSP Partner Name'],
-          subcontractor:
-              row.data['Subcontractor Company Name'] == 'UNKNOWN' ? null : row.data['Subcontractor Company Name'],
+          subcontractor,
           dma: row.data['DMA'],
           office: row.data['Office'],
           service_region: row.data['Service Region'],
