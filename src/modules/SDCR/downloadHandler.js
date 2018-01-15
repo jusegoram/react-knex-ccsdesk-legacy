@@ -1,6 +1,7 @@
 //CCS_UNIQUE R7KXTTQ5OB9
 import { knex } from '../../database'
 import Sql from './sql'
+import moment from 'moment'
 
 const csv = require('csv')
 const Readable = require('stream').Readable
@@ -25,6 +26,8 @@ export default async (req, res) => {
   const stream = new Readable({ objectMode: true })
 
   data.forEach(row => {
+    delete row.importedOn
+    row.snapshotDate = moment(row.snapshotDate).format()
     stream.push(row)
   })
   stream.push(null)
