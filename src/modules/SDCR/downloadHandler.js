@@ -27,7 +27,7 @@ export default async (req, res) => {
 
   data.forEach(row => {
     delete row.importedOn
-    row.snapshotDate = moment(row.snapshotDate).format()
+    row.snapshotDate = moment(row.snapshotDate).format('MM/DD/YY')
     stream.push(row)
   })
   stream.push(null)
