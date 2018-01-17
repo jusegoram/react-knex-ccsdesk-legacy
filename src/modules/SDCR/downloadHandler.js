@@ -21,8 +21,6 @@ export default async (req, res) => {
   const stream = new Readable({ objectMode: true })
 
   data.forEach(row => {
-    delete row.importedOn
-    row.snapshotDate = moment(row.snapshotDate).format('MM/DD/YY')
     stream.push(row)
   })
   stream.push(null)

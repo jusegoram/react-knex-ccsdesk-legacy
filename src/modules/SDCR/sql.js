@@ -141,14 +141,35 @@ export default class SdcrSql {
   }
   static async getAllSdcrRawData({ hsp, subcontractor, startDate, endDate }) {
     const companyFilter = hsp ? { hsp: hspMap[hsp] } : { subcontractor }
-    const results = await knex
-    .select()
+    const query = knex
+    .select([
+      knex.raw('sdcr.hsp as "HSP"'),
+      knex.raw('sdcr.division as "Division"'),
+      knex.raw('sdcr.dma as "DMA"'),
+      knex.raw('sdcr.office as "Office"'),
+      knex.raw('sdcr.service_region as "Service Region"'),
+      knex.raw('to_char(sdcr.snapshot_date, \'MM/DD/YY\') as "Snapshot Date"'),
+      knex.raw('sdcr.activity_number as "Activity Number"'),
+      knex.raw('sdcr.type as "Type"'),
+      knex.raw('sdcr.subtype as "Subtype"'),
+      knex.raw('sdcr.tech_id as "Tech ID"'),
+      knex.raw('(techs.last_name || \' \' || techs.first_name) as "Tech Name"'),
+      knex.raw('sdcr.tech_team as "Tech Team"'),
+      knex.raw('sdcr.subcontractor as "Subcontractor"'),
+      knex.raw('sdcr.status as "EOD Status"'),
+      knex.raw('sdcr.numerator as "Numerator"'),
+      knex.raw('sdcr.denominator as "Denominator"'),
+      knex.raw('sdcr.dwelling_type as "Dwelling Type"'),
+    ])
     .from('sdcr')
+    .leftJoin('techs', 'sdcr.tech_id', 'techs.tech_id')
     .where(companyFilter)
     .where('snapshot_date', '>=', startDate)
     .where('snapshot_date', '<=', endDate)
 
-    return camelizeKeys(results)
+    const results = await query
+
+    return results
   }
 }
 
