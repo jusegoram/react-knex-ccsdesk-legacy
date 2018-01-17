@@ -12,13 +12,8 @@ export default async (req, res) => {
   const { dwelling, startDate, endDate, groupType, scopeType, scopeName, type } = req.query
 
   const companyType = hsp === company ? 'hsp' : 'subcontractor'
-  const data = await Sql.getSdcrRawData({
+  const data = await Sql.getAllSdcrRawData({
     [companyType]: company,
-    groupType,
-    scopeType,
-    dwelling,
-    type,
-    scopeName,
     startDate,
     endDate,
   })

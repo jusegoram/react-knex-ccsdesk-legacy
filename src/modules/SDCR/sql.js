@@ -139,6 +139,17 @@ export default class SdcrSql {
 
     return camelizeKeys(results)
   }
+  static async getAllSdcrRawData({ hsp, subcontractor, startDate, endDate }) {
+    const companyFilter = hsp ? { hsp: hspMap[hsp] } : { subcontractor }
+    const results = await knex
+    .select()
+    .from('sdcr')
+    .where(companyFilter)
+    .where('snapshot_date', '>=', startDate)
+    .where('snapshot_date', '<=', endDate)
+
+    return camelizeKeys(results)
+  }
 }
 
 // const correctedTechs = await knex
