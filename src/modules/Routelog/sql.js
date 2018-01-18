@@ -19,13 +19,6 @@ export default class RoutelogImport {
         this.where({ source: user.hsp })
       }
     })
-      // .where(
-      //   'date',
-      //   '>=',
-      //   moment()
-      //   .add(-2, 'weeks')
-      //   .format('YYYY-MM-DD')
-      // )
     .orderBy('date', 'desc')
     .map(result => {
       result.date = moment(result.date).format('YYYY-MM-DD')

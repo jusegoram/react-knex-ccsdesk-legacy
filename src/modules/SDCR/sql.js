@@ -89,7 +89,6 @@ export default class SdcrSql {
     startDate,
     endDate,
   }) {
-    const companyFilter = hsp ? { hsp: hspMap[hsp] } : { subcontractor }
     const scopeFilter = scopeType && scopeName ? { [scopeType]: scopeName } : {}
     const results = (await knex
     .select(
@@ -98,7 +97,17 @@ export default class SdcrSql {
       knex.raw('(100.0*sum(numerator))/sum(denominator) as value')
     )
     .from('sdcr')
-    .where(companyFilter)
+    .where(function() {
+      if (hsp) {
+        this.where({ hsp: hspMap[hsp] })
+      } else {
+        if (subcontractor == 'DW DIRECT') {
+          this.whereIn('subcontractor', ['DW DIRECT', 'DW Direct INC'])
+        } else {
+          this.where({ subcontractor })
+        }
+      }
+    })
     .where(scopeFilter)
     .where(type ? { type } : {})
     .where(dwelling ? { dwelling_type: dwelling } : {})
@@ -123,14 +132,21 @@ export default class SdcrSql {
     startDate,
     endDate,
   }) {
-    const companyFilter = hsp ? { hsp: hspMap[hsp] } : { subcontractor }
     const scopeFilter = scopeType && scopeName ? { [scopeType]: scopeName } : {}
-    console.log(startDate)
-    console.log(endDate)
     const results = await knex
     .select()
     .from('sdcr')
-    .where(companyFilter)
+    .where(function() {
+      if (hsp) {
+        this.where({ hsp: hspMap[hsp] })
+      } else {
+        if (subcontractor == 'DW DIRECT') {
+          this.whereIn('subcontractor', ['DW DIRECT', 'DW Direct INC'])
+        } else {
+          this.where({ subcontractor })
+        }
+      }
+    })
     .where(scopeFilter)
     .where(type ? { type } : {})
     .where(dwelling ? { dwelling_type: dwelling } : {})
@@ -140,7 +156,6 @@ export default class SdcrSql {
     return camelizeKeys(results)
   }
   static async getAllSdcrRawData({ hsp, subcontractor, startDate, endDate }) {
-    const companyFilter = hsp ? { hsp: hspMap[hsp] } : { subcontractor }
     const query = knex
     .select([
       knex.raw('sdcr.hsp as "HSP"'),
@@ -163,7 +178,17 @@ export default class SdcrSql {
     ])
     .from('sdcr')
     .leftJoin('techs', 'sdcr.tech_id', 'techs.tech_id')
-    .where(companyFilter)
+    .where(function() {
+      if (hsp) {
+        this.where({ hsp: hspMap[hsp] })
+      } else {
+        if (subcontractor == 'DW DIRECT') {
+          this.whereIn('subcontractor', ['DW DIRECT', 'DW Direct INC'])
+        } else {
+          this.where({ subcontractor })
+        }
+      }
+    })
     .where('snapshot_date', '>=', startDate)
     .where('snapshot_date', '<=', endDate)
 

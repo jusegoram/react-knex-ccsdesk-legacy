@@ -16,6 +16,7 @@ class DateRangePicker extends React.Component {
 
   onChange(boundName) {
     return e => {
+      if (!e.target.value || !moment(e.target.value, 'YYYY-MM-DD').isValid()) return
       this.setState({ [boundName]: e.target.value }, () => {
         this.props.onChange(this.state)
       })
