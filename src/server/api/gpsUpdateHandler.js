@@ -5,6 +5,7 @@ export default async (req, res) => {
   if (req.body.secret !== 'fd97c1438493e83cebf651ac6779250dd78b64c424b14fea548dc24c7e797f7d') return res.sendStatus(401)
 
   const { username, latitude, longitude, timestamp } = req.body
+  console.log(username)
   knex('techs')
   .where({ tech_id: username })
   .update({
