@@ -1,0 +1,13 @@
+type RoutingResults {
+  techId: String
+  firstName: String
+  lastName: String
+  distance: Float
+  hasSkill: Boolean
+  workingThatDay: Boolean
+  hasTimeslotFree: Boolean
+}
+
+extend type Query {
+  routing(activityNumber: String): [RoutingResults]
+}

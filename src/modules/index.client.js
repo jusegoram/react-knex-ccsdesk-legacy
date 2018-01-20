@@ -8,7 +8,19 @@ import User from './User/client'
 import Pending from './Pending/client'
 import pageNotFound from '../client/pageNotFound'
 import SDCR from './SDCR/client'
+import Routing from './Routing/client'
 
 import Feature from './ClientFeature'
 
-export default new Feature(RoutelogDownload, Techs, Managers, Reference, ErrorCodes, User, SDCR, Pending, pageNotFound)
+export default new Feature(
+  RoutelogDownload,
+  Techs,
+  Managers,
+  Reference,
+  ErrorCodes,
+  User,
+  SDCR,
+  Pending,
+  Routing,
+  pageNotFound
+)

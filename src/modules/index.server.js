@@ -8,7 +8,8 @@ import User from './User/server'
 import Pending from './Pending/server'
 import util from './util/server'
 import SDCR from './SDCR/server'
+import Routing from './Routing/server'
 
 import Feature from './ServerFeature'
 
-export default new Feature(Techs, Managers, Reference, ErrorCodes, Routelog, User, SDCR, Pending, util)
+export default new Feature(Techs, Managers, Reference, ErrorCodes, Routelog, User, SDCR, Pending, Routing, util)

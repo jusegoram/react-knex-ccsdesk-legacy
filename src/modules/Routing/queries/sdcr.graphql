@@ -1,0 +1,11 @@
+query routing($activityNumber: String) {
+  routing(activityNumber: $activityNumber) {
+    techId
+    firstName
+    lastName
+    distance
+    hasSkill
+    workingThatDay
+    hasTimeslotFree
+  }
+}
