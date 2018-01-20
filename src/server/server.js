@@ -19,6 +19,7 @@ import log from '../common/log'
 import routelogDownloadHandler from '../modules/Routelog/downloadHandler'
 import pendingDownloadHandler from '../modules/Pending/downloadHandler'
 import sdcrDownloadHandler from '../modules/SDCR/downloadHandler'
+import gpsUpdateHandler from './api/gpsUpdateHandler'
 import '../client/debug'
 // eslint-disable-next-line import/no-mutable-exports
 let server
@@ -85,6 +86,7 @@ for (const middleware of modules.middlewares) {
 app.use('/routelogs/download/:id', routelogDownloadHandler)
 app.use('/pending/download', pendingDownloadHandler)
 app.use('/sdcr/download', sdcrDownloadHandler)
+app.use('/api/gps', gpsUpdateHandler)
 app.use('/graphql', (...args) => graphqlMiddleware(...args))
 if (__DEV__) {
   app.use('/graphiql', (...args) => graphiqlMiddleware(...args))
