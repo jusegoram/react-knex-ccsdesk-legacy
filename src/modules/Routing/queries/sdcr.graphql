@@ -3,6 +3,7 @@ query routing($activityNumber: String) {
     techId
     firstName
     lastName
+    subcontractor
     distance
     hasSkill
     workingThatDay

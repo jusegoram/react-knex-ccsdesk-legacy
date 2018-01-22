@@ -3,6 +3,7 @@ type RoutingResults {
   firstName: String
   lastName: String
   distance: Float
+  subcontractor: String
   hasSkill: Boolean
   workingThatDay: Boolean
   hasTimeslotFree: Boolean

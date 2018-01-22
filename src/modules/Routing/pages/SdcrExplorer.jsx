@@ -23,6 +23,7 @@ class SdcrExplorer extends React.Component {
     const { activityNumber, routes, loading } = this.props
     const columns = [
       { Header: 'Tech ID', accessor: 'techId' },
+      { Header: 'Subcontractor', accessor: 'subcontractor' },
       { Header: 'First Name', accessor: 'firstName' },
       { Header: 'Last Name', accessor: 'lastName' },
       { Header: 'Distance (mi)', id: 'distance', accessor: d => (d.distance / 1609.344).toFixed(1) },
