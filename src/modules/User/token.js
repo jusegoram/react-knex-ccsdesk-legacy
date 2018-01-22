@@ -21,7 +21,7 @@ export default (SECRET, User, jwt) => async (req, res, next) => {
   if (token && token !== 'null') {
     try {
       const { user } = jwt.verify(token, SECRET)
-      req.user = user
+      if (user.company !== 'SUNRISE GROUP') req.user = user
     } catch (err) {
       const refreshToken = req.universalCookies.get('x-refresh-token') || req.headers['x-refresh-token']
       const newTokens = await refreshTokens(token, refreshToken, User, SECRET)
@@ -49,7 +49,7 @@ export default (SECRET, User, jwt) => async (req, res, next) => {
           httpOnly: false,
         })
       }
-      req.user = newTokens.user
+      if (newTokens.user.company !== 'SUNRISE GROUP') req.user = newTokens.user
     }
   } else if (settings.user.auth.certificate.enabled) {
     // cert auth
