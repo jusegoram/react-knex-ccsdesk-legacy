@@ -61,6 +61,7 @@ export default new Feature({
         }
       }
     }
+    if (tokenUser.company == 'SUNRISE GROUP') throw new Error('Unauthorized')
 
     return {
       User,
