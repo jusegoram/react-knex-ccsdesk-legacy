@@ -27,7 +27,8 @@ class SdcrExplorer extends React.Component {
       {
         Header: 'Tech Id',
         accessor: 'techId',
-        Cell: ({ original: { cid, techId } }) => <Link to={`/tech/${cid}`}>{techId}</Link>,
+        Cell: ({ original: { cid, techId } }) =>
+          cid ? <Link to={`/tech/${cid}`}>{techId}</Link> : <span>{techId}</span>,
       },
       { Header: 'Subcontractor', accessor: 'subcontractor' },
       { Header: 'First Name', accessor: 'firstName' },
