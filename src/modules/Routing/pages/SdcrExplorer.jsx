@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { graphql, compose } from 'react-apollo'
 import { Card, Container, Row, Col, Input } from 'reactstrap'
 import ReactTable from 'react-table'
+import { Link } from 'react-router-dom'
 
 import PageLayout from '../../util/components/PageLayout'
 
@@ -20,9 +21,14 @@ class SdcrExplorer extends React.Component {
     this.props.setActivityNumber(e.target.value.toUpperCase())
   }
   render() {
-    const { activityNumber, routes, loading } = this.props
+    const { routes, loading } = this.props
+    const activityNumber = this.props.activityNumber || ''
     const columns = [
-      { Header: 'Tech ID', accessor: 'techId' },
+      {
+        Header: 'Tech Id',
+        accessor: 'techId',
+        Cell: ({ original: { cid, techId } }) => <Link to={`/tech/${cid}`}>{techId}</Link>,
+      },
       { Header: 'Subcontractor', accessor: 'subcontractor' },
       { Header: 'First Name', accessor: 'firstName' },
       { Header: 'Last Name', accessor: 'lastName' },

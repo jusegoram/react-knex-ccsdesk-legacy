@@ -2,7 +2,9 @@
 
 // import Sql from './sql'
 import axios from 'axios'
+import Promise from 'bluebird'
 import { requiresAuth } from '../User/permissions'
+import { knex } from '../../database'
 
 export default () => ({
   Query: {
@@ -13,8 +15,19 @@ export default () => ({
         const result = await axios.get(
           `https://goodman.fstechsupport.com/api/user/forJob?activityNumber=${activityNumber}`
         )
-        return result.data
+        const result2 = await Promise.resolve(result.data).map(async tech => {
+          console.log(tech)
+          const cidObj = await knex
+          .select('cid')
+          .from('techs')
+          .where({ tech_id: tech.techId })
+          .first()
+          tech.cid = cidObj && cidObj.cid
+          return tech
+        })
+        return result2
       } catch (e) {
+        console.error(e)
         return []
       }
     }),
