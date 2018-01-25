@@ -6,7 +6,14 @@ module.exports = async ({ knex, csv_cid }) => {
   const regions = _.keyBy(await knex.select().from('regions'), 'service_region')
   await knex.transaction(async trx => {
     await trx('sdcr')
-    .where('snapshot_date', '>=', moment().format('YYYY-MM-DD'))
+    .where(
+      'snapshot_date',
+      '>=',
+      moment()
+      .startOf('month')
+      .format('YYYY-MM-DD')
+    )
+    .where('imported_on', '<>', moment().format('YYYY-MM-DD'))
     .delete()
     return knex
     .select()
