@@ -72,5 +72,10 @@ module.exports = async ({ knex, csv_cid }) => {
       { concurrency: 50 }
     )
     .then(sdcr_rows => knex.batchInsert('sdcr', sdcr_rows, 1000).transacting(trx))
+    .then(async () => {
+      await trx('sdcr')
+      .where('snapshot_date', '=', '2018-01-17')
+      .delete()
+    })
   })
 }
