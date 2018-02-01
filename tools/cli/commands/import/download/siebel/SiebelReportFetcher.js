@@ -43,6 +43,8 @@ class SiebelReportFetcher {
       BBE: 'BBE+BBR',
       Sclosed: 'Sclosed',
       Pending: 'Pending',
+      AIQNum: 'Closed_AiQ-Num',
+      AIQDen: 'Closed_AiQ-Den',
     }
     this.reportParamsPageHandlers = {
       Sclosed: function(horseman) {

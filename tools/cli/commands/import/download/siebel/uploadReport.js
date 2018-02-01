@@ -8,6 +8,8 @@ const dataKeys = {
   Routelog: 'Activity #',
   TechProfile: 'Tech User ID',
   BBE: 'Activity Number',
+  AIQNum: 'Tech User ID',
+  AIQDen: 'Tech User ID',
 }
 
 module.exports = async ({ trx, reportName, cid, csvStream }) =>

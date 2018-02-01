@@ -19,5 +19,7 @@ query tech($cid: String!) {
       latitude
       longitude
     }
+    supervisorPhone
+    supervisor
   }
 }

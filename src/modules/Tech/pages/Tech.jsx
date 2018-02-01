@@ -266,34 +266,20 @@ class Tech extends React.Component {
                     !currentUser.role && (
                       <div style={{ minWidth: 460, marginLeft: 'auto', marginRight: 'auto' }}>
                         <center>
-                          <h4>Contacts (fallback)</h4>
+                          <h4>Contacts (FS Scheduler)</h4>
                         </center>
                         <Table bordered striped>
                           <thead>
                             <tr>
                               <th>Contact</th>
-                              <th>Manages Group</th>
                               <th>Phone Number</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {contactInfos.map((
-                              { managerName, group, formattedPhone } // techManager
-                            ) => (
-                              <tr key={managerName + group.id}>
-                                <td>
-                                  {/* <Link to={`/manager/${techManager.id}`}> */}
-                                  {namecase(managerName)}
-                                  {/* </Link> */}
-                                </td>
-                                <td>
-                                  {(group.type === 'SERVICE_REGION' || group.type === 'TECH_TEAM'
-                                    ? group.name
-                                    : namecase(group.name)) || 'Unknown'}
-                                </td>
-                                <td>{formattedPhone}</td>
-                              </tr>
-                            ))}
+                            <tr>
+                              <td>{tech.supervisor}</td>
+                              <td>{tech.supervisorPhone}</td>
+                            </tr>
                           </tbody>
                         </Table>
                       </div>

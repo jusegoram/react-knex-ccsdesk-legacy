@@ -38,12 +38,15 @@ const getTechPropsFromCsvRow = ({ knex, source, row }) => {
       first_name: name.first,
       last_name: name.last,
       phone_number,
+      supervisor_phone: row.data['Tech Team Supervisor Mobile #'],
+      supervisor: row.data['Team Name'],
       group_names,
       groups: JSON.stringify(groups),
       skills,
       schedule,
       start_location,
       coverage_radius,
+      data: row.data,
     },
     val => (!val ? null : val)
   )

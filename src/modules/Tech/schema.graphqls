@@ -28,6 +28,8 @@ type Tech {
   schedule: String
   coverageRadius: Float
   startLocation: LatLong
+  supervisor: String
+  supervisorPhone: String
 }
 
 type TechPage {
