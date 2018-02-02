@@ -2,7 +2,12 @@
 const _ = require('lodash')
 const moment = require('moment')
 
-module.exports = async ({ knex, csv_cid }) => {
+const sourceMap = {
+  Goodman: 'MULTIBAND',
+  DirectSat: 'DIRECT SAT',
+}
+
+module.exports = async ({ knex, csv_cid, csv }) => {
   const regions = _.keyBy(await knex.select().from('regions'), 'service_region')
   await knex.transaction(async trx => {
     await trx('sdcr')
@@ -15,6 +20,7 @@ module.exports = async ({ knex, csv_cid }) => {
       .format('YYYY-MM-DD')
     )
     .where('imported_on', '<>', moment().format('YYYY-MM-DD'))
+    .where({ hsp: sourceMap[csv.source] })
     .delete()
     return knex
     .select()

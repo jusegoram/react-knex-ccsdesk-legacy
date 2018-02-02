@@ -37,7 +37,7 @@ module.exports = async ({ knex, source, reportName }) => {
   }
   await csvDbRecord.indicateSaturationRunning()
   try {
-    await Saturate[reportName]({ knex, source, csv_cid: csvDbRecord.cid })
+    await Saturate[reportName]({ knex, source, csv_cid: csvDbRecord.cid, csv: csvDbRecord })
     await csvDbRecord.indicateSaturationCompleted()
   } catch (e) {
     await csvDbRecord.indicateSaturationErrored(e)
