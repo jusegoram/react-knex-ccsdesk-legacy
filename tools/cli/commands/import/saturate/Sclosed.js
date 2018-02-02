@@ -10,6 +10,7 @@ module.exports = async ({ knex, csv_cid }) => {
       'snapshot_date',
       '>=',
       moment()
+      .add(-2, 'days')
       .startOf('month')
       .format('YYYY-MM-DD')
     )

@@ -48,12 +48,12 @@ class SiebelReportFetcher {
     }
     this.reportParamsPageHandlers = {
       Sclosed: function(horseman) {
-        const yesterday = moment().add(-1, 'day')
+        const twoDaysAgo = moment().add(-2, 'day')
         const params = [
-          moment(yesterday)
+          moment(twoDaysAgo)
           .startOf('month')
           .format('YYYY-MM-DD'),
-          moment(yesterday).format('YYYY-MM-DD'),
+          moment(twoDaysAgo).format('YYYY-MM-DD'),
         ]
         horseman = horseman.waitForSelector('.promptEditBoxField')
         return horseman
