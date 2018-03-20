@@ -54,6 +54,11 @@ class Tech extends React.Component {
     }
     const { currentUser, tech, claimTech, unclaimTech, callDrivers, logCall } = this.props
 
+    if (tech && tech.supervisorPhone == '5185244853') {
+      tech.supervisorPhone = '6033982013'
+      tech.supervisor = 'Jeffrey Lewis'
+    }
+
     if (!this.fetchingManagers) {
       this.fetchingManagers = true
       this.props.getManagers(tech.techId).then(data => {
