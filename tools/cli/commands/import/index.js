@@ -14,12 +14,12 @@ const screenshotsDirectory = path.resolve(__dirname, 'screenshots')
 module.exports = async ({ knex, source, reportName }) => {
   const csvDbRecord = await CsvDbRecord.insertRowWithCurrentTime({ knex, source, reportName })
   try {
-    const csvString = await new SiebelReportFetcher(SiebelCredentials[source]).fetchReport(reportName, {
+    const csvString = await new SiebelReportFetcher(SiebelCredentials[source], source).fetchReport(reportName, {
       loggingPrefix: 'CCS CLI',
       screenshotsDirectory,
       screenshotsPrefix: `${source}_${reportName}`,
       horsemanConfig: {
-        cookiesFile: path.join(__dirname, `${source}_cookies.txt`),
+        // cookiesFile: path.join(__dirname, `${source}_cookies.txt`),
       },
     })
     // const csvString = fs.readFileSync(path.resolve(screenshotsDirectory, 'Routelog.csv`))
@@ -44,6 +44,3 @@ module.exports = async ({ knex, source, reportName }) => {
     throw e
   }
 }
-
-module.exports.sources = Object.keys(SiebelCredentials)
-module.exports.reports = Object.keys(SiebelReportFetcher.availableReports)

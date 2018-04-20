@@ -21,36 +21,20 @@ const runFunction = fn => async (args = {}, options = {}) => {
 }
 
 prog
-.version('1.0.0')
-.command('import', 'download report from siebel and insert into database')
-.argument(
-  '<source>',
-  'the source from which to import the report: ' + importFromSiebel.sources.join(', '),
-  new RegExp(`^${importFromSiebel.sources.join('|')}$`)
-)
-.argument(
-  '<reportName>',
-  'the name of the report to import: ' + importFromSiebel.reports.join(', '),
-  new RegExp(`^${importFromSiebel.reports.join('|')}$`)
-)
-.action(runFunction(importFromSiebel))
-.command('resaturate', 'resaturate imported report')
-.argument(
-  '<source>',
-  'the source from which to import the report: ' + importFromSiebel.sources.join(', '),
-  new RegExp(`^${importFromSiebel.sources.join('|')}$`)
-)
-.argument(
-  '<reportName>',
-  'the name of the report to import: ' + importFromSiebel.reports.join(', '),
-  new RegExp(`^${importFromSiebel.reports.join('|')}$`)
-)
-.argument('<cid>', 'the cid of the report to resaturate')
-.action(runFunction(resaturateReport))
-.command('crontab', 'synchronize crontab config with computer')
-.argument('<action>', 'what you want to do: test, update', /^(test|update)$/)
-.action(runFunction(crontab))
-.command('uniqueFiles', 'sets unique header to each js and jsx tracked file')
-.action(runFunction(uniqueFiles))
+  .version('1.0.0')
+  .command('import', 'download report from siebel and insert into database')
+  .argument('<source>', 'the source from which to import the report: ')
+  .argument('<reportName>', 'the name of the report to import: ')
+  .action(runFunction(importFromSiebel))
+  .command('resaturate', 'resaturate imported report')
+  .argument('<source>', 'the source from which to import the report: ')
+  .argument('<reportName>', 'the name of the report to import: ')
+  .argument('<cid>', 'the cid of the report to resaturate')
+  .action(runFunction(resaturateReport))
+  .command('crontab', 'synchronize crontab config with computer')
+  .argument('<action>', 'what you want to do: test, update', /^(test|update)$/)
+  .action(runFunction(crontab))
+  .command('uniqueFiles', 'sets unique header to each js and jsx tracked file')
+  .action(runFunction(uniqueFiles))
 
 prog.parse(process.argv)
