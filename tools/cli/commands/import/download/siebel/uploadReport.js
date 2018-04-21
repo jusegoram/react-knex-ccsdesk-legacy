@@ -14,6 +14,7 @@ const dataKeys = {
 
 module.exports = async ({ trx, reportName, cid, csvStream }) =>
   new Promise((resolve, reject) => {
+    const array = []
     csvStream
     .pipe(
       csv.parse({
@@ -27,23 +28,19 @@ module.exports = async ({ trx, reportName, cid, csvStream }) =>
         objectMode: true,
         transform(obj, encoding, callback) {
           console.log('transforming')
-          callback(null, {
+          const record = {
             csv_cid: cid,
             data: obj,
             data_key: obj[dataKeys[reportName]],
-          })
+          }
+          array.push(record)
+          callback(null, record)
         },
-      })
-    )
-    .pipe(
-      new KnexInsertStream({
-        trx,
-        table: 'downloaded_csv_rows',
       })
     )
     .on('data', () => {})
     .on('end', () => {
-      resolve()
+      resolve(array)
     })
     .on('error', error => {
       reject(error)

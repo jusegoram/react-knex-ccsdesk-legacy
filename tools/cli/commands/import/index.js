@@ -46,7 +46,9 @@ module.exports = async ({ knex, source, reportName }) => {
     await knex.transaction(async trx => {
       await csvDbRecord.setHeaders(headers)
       console.log('uploading report')
-      await uploadReport({ trx, reportName, cid: csvDbRecord.cid, csvStream: cleanCsvStream })
+      const records = await uploadReport({ trx, reportName, cid: csvDbRecord.cid, csvStream: cleanCsvStream })
+      console.log(records)
+      await knex.batchInsert('downloaded_csv_rows', records, 100).transacting(trx)
       console.log('report uploaded')
       await csvDbRecord.indicateDownloadCompleted()
     })
