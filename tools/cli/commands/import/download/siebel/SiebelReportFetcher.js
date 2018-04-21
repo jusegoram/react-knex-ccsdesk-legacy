@@ -29,7 +29,7 @@ class SiebelReportFetcher {
     const loginUrl = 'https://sso.directv.com/idp/SSO.saml2'
     await this.page.goto(dashboardUrl, { timeout })
     await this.page.waitForFunction(`window.location == "${dashboardUrl}" || window.location == "${loginUrl}"`)
-    await this.page.waitFor(10000)
+    await this.page.waitFor(5000)
     try {
       await this.page.type('#username', this.credentials.username)
       await this.page.waitFor(1000)
