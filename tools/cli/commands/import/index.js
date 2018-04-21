@@ -12,6 +12,10 @@ const Saturate = require('./saturate')
 
 const screenshotsDirectory = path.resolve(__dirname, 'screenshots')
 module.exports = async ({ knex, source, reportName }) => {
+  // if its running for more than two hours, force quit
+  setTimeout(function() {
+    process.exit()
+  }, 2 * 1000 * 60 * 60)
   const csvDbRecord = await CsvDbRecord.insertRowWithCurrentTime({ knex, source, reportName })
   try {
     const reportFetcher = new SiebelReportFetcher(SiebelCredentials[source], source)
