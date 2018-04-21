@@ -10,7 +10,6 @@ const fs = require('fs')
 Promise.promisifyAll(fs)
 
 const timeout = 20 * 60 * 1000
-const downloadPath = path.resolve(__dirname, 'downloaded_reports')
 moment.tz.setDefault('America/Chicago')
 
 const availableReports = {
@@ -48,6 +47,7 @@ class SiebelReportFetcher {
       await this.page.click('.ping-button.normal.allow')
       await this.page.waitForFunction(`window.location == "${dashboardUrl}"`)
     } catch (e) {} // eslint-disable-line no-empty
+    const downloadPath = path.resolve(__dirname, 'downloaded_reports', this.company)
     await this.page._client.send('Page.setDownloadBehavior', {
       behavior: 'allow',
       downloadPath,
@@ -64,6 +64,7 @@ class SiebelReportFetcher {
     await this.goToDashboard()
     console.log('logged in')
     const downloadUrl = this.getDownloadUrl({ reportName })
+    const downloadPath = path.resolve(__dirname, 'downloaded_reports', this.company)
     const filePath = path.resolve(downloadPath, `${reportName}.csv`)
     if (fs.existsSync(filePath)) {
       await fs.renameAsync(filePath, `${filePath}.bk`)
