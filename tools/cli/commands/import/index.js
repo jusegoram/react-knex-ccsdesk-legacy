@@ -14,7 +14,8 @@ const screenshotsDirectory = path.resolve(__dirname, 'screenshots')
 module.exports = async ({ knex, source, reportName }) => {
   const csvDbRecord = await CsvDbRecord.insertRowWithCurrentTime({ knex, source, reportName })
   try {
-    const csvString = await new SiebelReportFetcher(SiebelCredentials[source], source).fetchReport(reportName, {
+    const reportFetcher = new SiebelReportFetcher(SiebelCredentials[source], source)
+    const csvString = await reportFetcher.fetchReport(reportName, {
       loggingPrefix: 'CCS CLI',
       screenshotsDirectory,
       screenshotsPrefix: `${source}_${reportName}`,
@@ -22,23 +23,25 @@ module.exports = async ({ knex, source, reportName }) => {
         // cookiesFile: path.join(__dirname, `${source}_cookies.txt`),
       },
     })
+    reportFetcher.close()
     console.log(csvString)
     // const csvString = fs.readFileSync(path.resolve(screenshotsDirectory, 'Routelog.csv`))
-    const headers = await getCsvHeaders(csvString)
-    const csvStream = convertStringToStream(csvString)
-    const cleanCsvStream = csvStream.pipe(new SanitizeStringStream())
-    await knex.transaction(async trx => {
-      await csvDbRecord.setHeaders(headers)
-      await uploadReport({ trx, reportName, cid: csvDbRecord.cid, csvStream: cleanCsvStream })
-      await csvDbRecord.indicateDownloadCompleted()
-    })
+
+    // const headers = await getCsvHeaders(csvString)
+    // const csvStream = convertStringToStream(csvString)
+    // const cleanCsvStream = csvStream.pipe(new SanitizeStringStream())
+    // await knex.transaction(async trx => {
+    //   await csvDbRecord.setHeaders(headers)
+    //   await uploadReport({ trx, reportName, cid: csvDbRecord.cid, csvStream: cleanCsvStream })
+    //   await csvDbRecord.indicateDownloadCompleted()
+    // })
   } catch (e) {
     await csvDbRecord.indicateDownloadErrored(e)
     throw e
   }
-  await csvDbRecord.indicateSaturationRunning()
+  // await csvDbRecord.indicateSaturationRunning()
   try {
-    await Saturate[reportName]({ knex, source, csv_cid: csvDbRecord.cid, csv: csvDbRecord })
+    // await Saturate[reportName]({ knex, source, csv_cid: csvDbRecord.cid, csv: csvDbRecord })
     await csvDbRecord.indicateSaturationCompleted()
   } catch (e) {
     await csvDbRecord.indicateSaturationErrored(e)
