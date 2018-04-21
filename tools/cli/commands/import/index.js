@@ -31,11 +31,14 @@ module.exports = async ({ knex, source, reportName }) => {
     // console.log('closing browser')
     // await reportFetcher.close()
     // console.log('browser closed')
-    const csvString =
-      '' +
+    const csvString = ('' +
       fs.readFileSync(
         path.resolve(__dirname, 'download', 'siebel', 'downloaded_reports', 'Route Log - Time - Zones.csv')
       )
+    )
+    .split('\n')
+    .slice(0, 20)
+    .join('\n')
 
     const headers = await getCsvHeaders(csvString)
     const csvStream = convertStringToStream(csvString)
