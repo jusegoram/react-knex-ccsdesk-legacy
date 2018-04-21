@@ -68,7 +68,5 @@ module.exports = async ({ knex, source, reportName }) => {
   } catch (e) {
     await csvDbRecord.indicateSaturationErrored(e)
     throw e
-  } finally {
-    process.exit()
   }
 }
