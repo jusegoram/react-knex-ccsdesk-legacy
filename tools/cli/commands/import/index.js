@@ -49,6 +49,8 @@ module.exports = async ({ knex, source, reportName }) => {
     })
     console.log('report downlod indicated')
   } catch (e) {
+    console.log('report error')
+    console.log(e)
     await csvDbRecord.indicateDownloadErrored(e)
     throw e
   }
