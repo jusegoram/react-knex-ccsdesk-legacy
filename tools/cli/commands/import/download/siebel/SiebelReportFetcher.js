@@ -23,7 +23,7 @@ class SiebelReportFetcher {
   }
   async goToDashboard() {
     const userDataDir = path.resolve(__dirname, 'user_data', this.company)
-    this.browser = await puppeteer.launch({ userDataDir, headless: false, slowMo: true })
+    this.browser = await puppeteer.launch({ userDataDir, headless: true, slowMo: true })
     this.page = await this.browser.newPage()
     const dashboardUrl = 'https://sesar.directv.com/analytics/saw.dll?Dashboard'
     const loginUrl = 'https://sso.directv.com/idp/SSO.saml2'
@@ -31,9 +31,9 @@ class SiebelReportFetcher {
     await this.page.waitForFunction(`window.location == "${dashboardUrl}" || window.location == "${loginUrl}"`)
     await this.page.waitFor(10000)
     try {
-      await this.page.type('#username', this.credentials.username, { delay: 300 })
+      await this.page.type('#username', this.credentials.username)
       await this.page.waitFor(1000)
-      await this.page.type('#password', this.credentials.password, { delay: 300 })
+      await this.page.type('#password', this.credentials.password)
       await this.page.waitFor(1000)
       await this.page.click('.ping-button.normal.allow')
       await this.page.waitForFunction(`window.location == "${dashboardUrl}"`)
