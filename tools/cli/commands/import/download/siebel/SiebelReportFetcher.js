@@ -83,9 +83,6 @@ class SiebelReportFetcher {
     })
     .timeout(20 * 60 * 1000)
     .finally(async () => {
-      console.log('closing browser')
-      await this.browser.close()
-      console.log('browser closed')
       clearInterval(fileWatchInterval)
     })
   }

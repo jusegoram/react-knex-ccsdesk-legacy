@@ -23,7 +23,9 @@ module.exports = async ({ knex, source, reportName }) => {
         // cookiesFile: path.join(__dirname, `${source}_cookies.txt`),
       },
     })
-    reportFetcher.close()
+    console.log('closing browser')
+    await reportFetcher.close()
+    console.log('browser closed')
     console.log(csvString)
     // const csvString = fs.readFileSync(path.resolve(screenshotsDirectory, 'Routelog.csv`))
 
