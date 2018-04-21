@@ -49,6 +49,7 @@ class SiebelReportFetcher {
     return `https://sesar.directv.com/analytics/saw.dll?Go&path=${encodedReportPath}&Format=csv&Extension=.csv`
   }
   async fetchReport(reportName) {
+    console.log('fetching ' + reportName)
     await this.goToDashboard()
     console.log('logged in')
     const downloadUrl = this.getDownloadUrl({ reportName })
