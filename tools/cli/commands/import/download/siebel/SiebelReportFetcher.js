@@ -13,6 +13,16 @@ const timeout = 20 * 60 * 1000
 const downloadPath = path.resolve(__dirname, 'downloaded_reports')
 moment.tz.setDefault('America/Chicago')
 
+const availableReports = {
+  TechProfile: 'Tech Profile',
+  Routelog: 'Route Log - Time - Zones',
+  BBE: 'BBE+BBR',
+  Sclosed: 'Sclosed',
+  Pending: 'Pending',
+  AIQNum: 'Closed_AiQ-Num',
+  AIQDen: 'Closed_AiQ-Den',
+}
+
 class SiebelReportFetcher {
   constructor(credentials, company) {
     this.company = company
@@ -48,7 +58,8 @@ class SiebelReportFetcher {
     const encodedReportPath = encodeURIComponent(reportPath)
     return `https://sesar.directv.com/analytics/saw.dll?Go&path=${encodedReportPath}&Format=csv&Extension=.csv`
   }
-  async fetchReport(reportName) {
+  async fetchReport(reportLocalName) {
+    const reportName = availableReports[reportLocalName]
     console.log('fetching ' + reportName)
     await this.goToDashboard()
     console.log('logged in')
