@@ -22,6 +22,7 @@ module.exports = async ({ knex, source, reportName }) => {
         // cookiesFile: path.join(__dirname, `${source}_cookies.txt`),
       },
     })
+    console.log(csvString)
     // const csvString = fs.readFileSync(path.resolve(screenshotsDirectory, 'Routelog.csv`))
     const headers = await getCsvHeaders(csvString)
     const csvStream = convertStringToStream(csvString)

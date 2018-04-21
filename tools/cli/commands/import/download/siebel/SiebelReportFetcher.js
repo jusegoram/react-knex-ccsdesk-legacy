@@ -50,16 +50,20 @@ class SiebelReportFetcher {
   }
   async fetchReport(reportName) {
     await this.goToDashboard()
+    console.log('logged in')
     const downloadUrl = this.getDownloadUrl({ reportName })
     const filePath = path.resolve(downloadPath, `${reportName}.csv`)
     if (fs.existsSync(filePath)) {
       await fs.renameAsync(filePath, `${filePath}.bk`)
     }
+    console.log('downloading...')
     this.page.goto(downloadUrl, { timeout }).catch(() => {})
+    console.log('waiting for file to download...')
     let fileWatchInterval = null
     return new Promise(resolve => {
       fileWatchInterval = setInterval(async () => {
         if (fs.existsSync(filePath)) {
+          console.log('downloaded.')
           clearInterval(fileWatchInterval)
           return resolve('' + (await fs.readFileAsync(filePath)))
         }
