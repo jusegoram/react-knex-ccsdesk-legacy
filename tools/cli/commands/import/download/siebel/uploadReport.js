@@ -27,7 +27,6 @@ module.exports = async ({ trx, reportName, cid, csvStream }) =>
       new Transform({
         objectMode: true,
         transform(obj, encoding, callback) {
-          console.log('transforming')
           const record = {
             csv_cid: cid,
             data: obj,
