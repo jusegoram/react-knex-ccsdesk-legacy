@@ -19,26 +19,23 @@ module.exports = async ({ knex, source, reportName }) => {
   }, 2 * 1000 * 60 * 60)
   const csvDbRecord = await CsvDbRecord.insertRowWithCurrentTime({ knex, source, reportName })
   try {
-    const reportFetcher = new SiebelReportFetcher(SiebelCredentials[source], source)
-    const csvString = await reportFetcher.fetchReport(reportName, {
-      loggingPrefix: 'CCS CLI',
-      screenshotsDirectory,
-      screenshotsPrefix: `${source}_${reportName}`,
-      horsemanConfig: {
-        // cookiesFile: path.join(__dirname, `${source}_cookies.txt`),
-      },
-    })
-    console.log('closing browser')
-    await reportFetcher.close()
-    console.log('browser closed')
-    // const csvString = ('' +
-    //   fs.readFileSync(
-    //     path.resolve(__dirname, 'download', 'siebel', 'downloaded_reports', 'Route Log - Time - Zones.csv')
-    //   )
-    // )
-    // .split('\n')
-    // .slice(0, 20)
-    // .join('\n')
+    let csvString = null
+    if (reportName !== 'Sclosed') {
+      const reportFetcher = new SiebelReportFetcher(SiebelCredentials[source], source)
+      csvString = await reportFetcher.fetchReport(reportName, {
+        loggingPrefix: 'CCS CLI',
+        screenshotsDirectory,
+        screenshotsPrefix: `${source}_${reportName}`,
+        horsemanConfig: {
+          // cookiesFile: path.join(__dirname, `${source}_cookies.txt`),
+        },
+      })
+      console.log('closing browser')
+      await reportFetcher.close()
+      console.log('browser closed')
+    } else {
+      csvString = ('' + fs.readFileSync('/home/ubuntu/Sclosed.csv'))
+    }  
 
     const headers = await getCsvHeaders(csvString)
     const csvStream = convertStringToStream(csvString)
