@@ -9,7 +9,7 @@ let connectionDevelopment = {
   charset: 'utf8',
 }
 let connectionProduction = {
-  host: 'ccsdesk.cljr4tpdvim0.us-east-1.rds.amazonaws.com',
+  host: 'ccsdesk.cm2jturmggw8.us-east-1.rds.amazonaws.com',
   user: 'master',
   password: process.env.DB_PASSWORD,
   database: 'ccsdesk',

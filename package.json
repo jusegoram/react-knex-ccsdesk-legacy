@@ -9,8 +9,7 @@
     "yarn": ">= 0.19.0"
   },
   "scripts": {
-    "install-puppeteer-dependencies":
-      "sudo apt-get install gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget",
+    "install-puppeteer-dependencies": "sudo apt-get install gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget",
     "build": "cross-env NODE_ENV=production spin build",
     "exp": "spin exp",
     "start": "node --harmony build/server",
@@ -27,7 +26,10 @@
     "installCli": "ln -s $PWD/tools/cli/ccs /usr/local/bin/ccs"
   },
   "lint-staged": {
-    "*.{js,jsx,json}": ["eslint --fix", "git add"]
+    "*.{js,jsx,json}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -37,7 +39,14 @@
     "url": "https://github.com/sysgears/apollo-universal-starter-kit/issues"
   },
   "homepage": "https://github.com/sysgears/apollo-universal-starter-kit",
-  "keywords": ["apollo", "universal", "starter", "graphql", "react", "redux"],
+  "keywords": [
+    "apollo",
+    "universal",
+    "starter",
+    "graphql",
+    "react",
+    "redux"
+  ],
   "author": "SysGears INC",
   "license": "MIT",
   "dependencies": {
@@ -164,7 +173,7 @@
     "chai-http": "^3.0.0",
     "compression": "^1.7.1",
     "connect": "^3.6.5",
-    "cross-env": "^5.0.5",
+    "cross-env": "^5.2.0",
     "css-loader": "^0.28.7",
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-16": "^1.0.1",
@@ -215,7 +224,7 @@
     "source-list-map": "^2.0.0",
     "spinjs": "^0.4.5",
     "style-loader": "^0.19.0",
-    "tcomb": "^3.2.24",
+    "tcomb": "^3.2.27",
     "url-loader": "^0.6.2",
     "wait-on": "^2.0.2",
     "webpack": "^3.6.0",
@@ -234,6 +243,9 @@
     "graphql": "^0.11.7"
   },
   "greenkeeper": {
-    "ignore": ["flow-bin", "mime"]
+    "ignore": [
+      "flow-bin",
+      "mime"
+    ]
   }
 }
